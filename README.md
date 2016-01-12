@@ -1,7 +1,5 @@
 # feyy.github.io
 A FE  の YY everyday!
-<<<<<<< c69ca92270f66d4a70685c9d3218642073f0228e
-=======
 
 [Hexo](http://hexo.io/)! Check [documentation](http://hexo.io/docs/) for more info. If you get any problems when using Hexo, you can find the answer in [troubleshooting](http://hexo.io/docs/troubleshooting.html) or you can ask me on [GitHub](https://github.com/hexojs/hexo/issues).
 
@@ -38,4 +36,3 @@ $ hexo deploy
 ```
 
 More info: [Deployment](http://hexo.io/docs/deployment.html)
->>>>>>> init
