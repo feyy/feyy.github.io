@@ -13,7 +13,7 @@ $ hexo new "My New Post"
 
 More info: [Writing](http://hexo.io/docs/writing.html)
 
-### Run server
+#### Run server
 
 ``` bash
 $ hexo server
@@ -21,7 +21,7 @@ $ hexo server
 
 More info: [Server](http://hexo.io/docs/server.html)
 
-### Generate static files
+##### Generate static files
 
 ``` bash
 $ hexo generate
@@ -29,7 +29,7 @@ $ hexo generate
 
 More info: [Generating](http://hexo.io/docs/generating.html)
 
-### Deploy to remote sites
+###### Deploy to remote sites
 
 ``` bash
 $ hexo deploy
