@@ -57,9 +57,12 @@ var o ={
 创建或配置对象的多个属性
 
 ```javascript
-@param {object} obj 要在其上创建或者配置属性的对象
-@param {object} descriptors 将属性名映射到属性描述符的对象
-@return {object} obj 返回传入的obj对象
+/**
+ * @param {object} obj 要在其上创建或者配置属性的对象
+ * @param {object} descriptors 将属性名映射到属性描述符的对象
+ * @return {object} obj 返回传入的obj对象
+ */
+
 Object.defineProperties(obj,{
     a:{value:"a",writable:false,enumerable:true,configurable:true},
     b:{value:"b",writable:false,enumerable:true,configurable:true}
@@ -69,10 +72,13 @@ Object.defineProperties(obj,{
 ## Object.defineProperty(obj, name, desc)
 创建或配置对象的一个属性
 ```javascript
-@param {object} obj 要在其上创建或者配置属性的对象
-@param {string} name 将属性名映射到属性描述符的对象
-@param {object} desc 一个属性描述符对象，描述要创建的新属性或对现有属性的修改
-@return {object} obj 返回传入的obj对象
+/**
+ * @param {object} obj 要在其上创建或者配置属性的对象
+ * @param {string} name 将属性名映射到属性描述符的对象
+ * @param {object} desc 一个属性描述符对象，描述要创建的新属性或对现有属性的修改
+ * @return {object} obj 返回传入的obj对象
+ */
+
 Object.defineProperty(obj, "c", { 
     value: "c",
     writable:false, 

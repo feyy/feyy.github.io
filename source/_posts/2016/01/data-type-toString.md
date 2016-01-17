@@ -3,7 +3,6 @@ title: javascript中的数据类型判断
 date: 2016-01-17 02:22:16
 tags:
 - javascript
-- toString
 ---
 靠，周末比平时还累，好不容易补完了昨天的一篇...看来今天又要水一篇了😭。
 ## typeof
@@ -47,14 +46,14 @@ object instanceof constructor
 * 其他对象：返回[object " + 构造函数的名称 + "]。
 
 ```javascript
-Object.prototype.toString.call(2) // "[object Number]"
-Object.prototype.toString.call('') // "[object String]"
-Object.prototype.toString.call(true) // "[object Boolean]"
-Object.prototype.toString.call(undefined) // "[object Undefined]"
-Object.prototype.toString.call(null) // "[object Null]"
-Object.prototype.toString.call(Math) // "[object Math]"
-Object.prototype.toString.call({}) // "[object Object]"
-Object.prototype.toString.call([]) // "[object Array]"
+Object.prototype.toString.call(2)           // "[object Number]"
+Object.prototype.toString.call('')          // "[object String]"
+Object.prototype.toString.call(true)        // "[object Boolean]"
+Object.prototype.toString.call(undefined)   // "[object Undefined]"
+Object.prototype.toString.call(null)        // "[object Null]"
+Object.prototype.toString.call(Math)        // "[object Math]"
+Object.prototype.toString.call({})          // "[object Object]"
+Object.prototype.toString.call([])          // "[object Array]"
 ```
 
 
