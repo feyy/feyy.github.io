@@ -4,9 +4,9 @@
   <subtitle>A FE の YY everyday！</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="https://feyy.github.io/"/>
+  <link href="http://feyy.github.io/"/>
   <updated>2017-06-12T17:55:30.000Z</updated>
-  <id>https://feyy.github.io/</id>
+  <id>http://feyy.github.io/</id>
   
   <author>
     <name>felix</name>
@@ -17,8 +17,8 @@
   
   <entry>
     <title>object冻结</title>
-    <link href="https://feyy.github.io/2017/06/object-freeze/"/>
-    <id>https://feyy.github.io/2017/06/object-freeze/</id>
+    <link href="http://feyy.github.io/2017/06/object-freeze/"/>
+    <id>http://feyy.github.io/2017/06/object-freeze/</id>
     <published>2017-06-12T15:56:33.000Z</published>
     <updated>2017-06-12T17:55:30.000Z</updated>
     
@@ -57,16 +57,16 @@
     </summary>
     
     
-      <category term="javascript" scheme="https://feyy.github.io/tags/javascript/"/>
+      <category term="javascript" scheme="http://feyy.github.io/tags/javascript/"/>
     
-      <category term="object" scheme="https://feyy.github.io/tags/object/"/>
+      <category term="object" scheme="http://feyy.github.io/tags/object/"/>
     
   </entry>
   
   <entry>
     <title>可乐鸡翅</title>
-    <link href="https://feyy.github.io/2016/07/coke-chicken-wings/"/>
-    <id>https://feyy.github.io/2016/07/coke-chicken-wings/</id>
+    <link href="http://feyy.github.io/2016/07/coke-chicken-wings/"/>
+    <id>http://feyy.github.io/2016/07/coke-chicken-wings/</id>
     <published>2016-07-07T15:56:33.000Z</published>
     <updated>2016-09-08T14:23:50.000Z</updated>
     
@@ -90,14 +90,14 @@
     </summary>
     
     
-      <category term="foods" scheme="https://feyy.github.io/tags/foods/"/>
+      <category term="foods" scheme="http://feyy.github.io/tags/foods/"/>
     
   </entry>
   
   <entry>
     <title>高效演讲 -- 笔记</title>
-    <link href="https://feyy.github.io/2016/07/efficient-speech-note/"/>
-    <id>https://feyy.github.io/2016/07/efficient-speech-note/</id>
+    <link href="http://feyy.github.io/2016/07/efficient-speech-note/"/>
+    <id>http://feyy.github.io/2016/07/efficient-speech-note/</id>
     <published>2016-07-06T15:56:33.000Z</published>
     <updated>2016-09-08T14:23:50.000Z</updated>
     
@@ -177,14 +177,14 @@
     </summary>
     
     
-      <category term="books" scheme="https://feyy.github.io/tags/books/"/>
+      <category term="books" scheme="http://feyy.github.io/tags/books/"/>
     
   </entry>
   
   <entry>
     <title>ES6 CHEAT SHEET</title>
-    <link href="https://feyy.github.io/2016/06/es6-cheat-sheet/"/>
-    <id>https://feyy.github.io/2016/06/es6-cheat-sheet/</id>
+    <link href="http://feyy.github.io/2016/06/es6-cheat-sheet/"/>
+    <id>http://feyy.github.io/2016/06/es6-cheat-sheet/</id>
     <published>2016-06-24T15:56:33.000Z</published>
     <updated>2016-09-08T14:23:50.000Z</updated>
     
@@ -206,14 +206,14 @@
     </summary>
     
     
-      <category term="es6" scheme="https://feyy.github.io/tags/es6/"/>
+      <category term="es6" scheme="http://feyy.github.io/tags/es6/"/>
     
   </entry>
   
   <entry>
     <title>高效演讲 -- 精彩书摘</title>
-    <link href="https://feyy.github.io/2016/06/efficient-speech/"/>
-    <id>https://feyy.github.io/2016/06/efficient-speech/</id>
+    <link href="http://feyy.github.io/2016/06/efficient-speech/"/>
+    <id>http://feyy.github.io/2016/06/efficient-speech/</id>
     <published>2016-06-23T15:56:33.000Z</published>
     <updated>2016-09-08T14:23:50.000Z</updated>
     
@@ -354,14 +354,14 @@
     </summary>
     
     
-      <category term="books" scheme="https://feyy.github.io/tags/books/"/>
+      <category term="books" scheme="http://feyy.github.io/tags/books/"/>
     
   </entry>
   
   <entry>
     <title>environment variable</title>
-    <link href="https://feyy.github.io/2016/02/environment-variable/"/>
-    <id>https://feyy.github.io/2016/02/environment-variable/</id>
+    <link href="http://feyy.github.io/2016/02/environment-variable/"/>
+    <id>http://feyy.github.io/2016/02/environment-variable/</id>
     <published>2016-02-16T15:56:33.000Z</published>
     <updated>2016-09-08T14:23:50.000Z</updated>
     
@@ -398,14 +398,14 @@
     </summary>
     
     
-      <category term="bash" scheme="https://feyy.github.io/tags/bash/"/>
+      <category term="bash" scheme="http://feyy.github.io/tags/bash/"/>
     
   </entry>
   
   <entry>
     <title>pm2 senior (一)</title>
-    <link href="https://feyy.github.io/2016/01/pm2-senior-1/"/>
-    <id>https://feyy.github.io/2016/01/pm2-senior-1/</id>
+    <link href="http://feyy.github.io/2016/01/pm2-senior-1/"/>
+    <id>http://feyy.github.io/2016/01/pm2-senior-1/</id>
     <published>2016-01-25T13:53:18.000Z</published>
     <updated>2016-09-08T14:23:50.000Z</updated>
     
@@ -425,14 +425,14 @@
     </summary>
     
     
-      <category term="pm2" scheme="https://feyy.github.io/tags/pm2/"/>
+      <category term="pm2" scheme="http://feyy.github.io/tags/pm2/"/>
     
   </entry>
   
   <entry>
     <title>Commit message 和 Change log</title>
-    <link href="https://feyy.github.io/2016/01/commit-message/"/>
-    <id>https://feyy.github.io/2016/01/commit-message/</id>
+    <link href="http://feyy.github.io/2016/01/commit-message/"/>
+    <id>http://feyy.github.io/2016/01/commit-message/</id>
     <published>2016-01-22T19:23:08.000Z</published>
     <updated>2016-09-08T14:23:50.000Z</updated>
     
@@ -483,8 +483,8 @@
   
   <entry>
     <title>input-file定制样式</title>
-    <link href="https://feyy.github.io/2016/01/input-file-customer/"/>
-    <id>https://feyy.github.io/2016/01/input-file-customer/</id>
+    <link href="http://feyy.github.io/2016/01/input-file-customer/"/>
+    <id>http://feyy.github.io/2016/01/input-file-customer/</id>
     <published>2016-01-21T16:44:27.000Z</published>
     <updated>2016-09-08T14:23:50.000Z</updated>
     
@@ -511,14 +511,14 @@
     </summary>
     
     
-      <category term="input-file" scheme="https://feyy.github.io/tags/input-file/"/>
+      <category term="input-file" scheme="http://feyy.github.io/tags/input-file/"/>
     
   </entry>
   
   <entry>
     <title>simple stress testing tool</title>
-    <link href="https://feyy.github.io/2016/01/simple-stress-testing-tool/"/>
-    <id>https://feyy.github.io/2016/01/simple-stress-testing-tool/</id>
+    <link href="http://feyy.github.io/2016/01/simple-stress-testing-tool/"/>
+    <id>http://feyy.github.io/2016/01/simple-stress-testing-tool/</id>
     <published>2016-01-20T17:48:10.000Z</published>
     <updated>2016-09-08T14:23:50.000Z</updated>
     
@@ -546,16 +546,16 @@
     </summary>
     
     
-      <category term="test" scheme="https://feyy.github.io/tags/test/"/>
+      <category term="test" scheme="http://feyy.github.io/tags/test/"/>
     
-      <category term="tool" scheme="https://feyy.github.io/tags/tool/"/>
+      <category term="tool" scheme="http://feyy.github.io/tags/tool/"/>
     
   </entry>
   
   <entry>
     <title>动画性能（二）</title>
-    <link href="https://feyy.github.io/2016/01/animation-performance-2/"/>
-    <id>https://feyy.github.io/2016/01/animation-performance-2/</id>
+    <link href="http://feyy.github.io/2016/01/animation-performance-2/"/>
+    <id>http://feyy.github.io/2016/01/animation-performance-2/</id>
     <published>2016-01-18T17:12:13.000Z</published>
     <updated>2016-09-08T14:23:50.000Z</updated>
     
@@ -614,16 +614,16 @@
     </summary>
     
     
-      <category term="animation" scheme="https://feyy.github.io/tags/animation/"/>
+      <category term="animation" scheme="http://feyy.github.io/tags/animation/"/>
     
-      <category term="performance" scheme="https://feyy.github.io/tags/performance/"/>
+      <category term="performance" scheme="http://feyy.github.io/tags/performance/"/>
     
   </entry>
   
   <entry>
     <title>动画性能（一）</title>
-    <link href="https://feyy.github.io/2016/01/animation-performance-1/"/>
-    <id>https://feyy.github.io/2016/01/animation-performance-1/</id>
+    <link href="http://feyy.github.io/2016/01/animation-performance-1/"/>
+    <id>http://feyy.github.io/2016/01/animation-performance-1/</id>
     <published>2016-01-17T18:39:39.000Z</published>
     <updated>2016-09-08T14:23:50.000Z</updated>
     
@@ -665,16 +665,16 @@
     </summary>
     
     
-      <category term="animation" scheme="https://feyy.github.io/tags/animation/"/>
+      <category term="animation" scheme="http://feyy.github.io/tags/animation/"/>
     
-      <category term="performance" scheme="https://feyy.github.io/tags/performance/"/>
+      <category term="performance" scheme="http://feyy.github.io/tags/performance/"/>
     
   </entry>
   
   <entry>
     <title>javascript中的数据类型判断</title>
-    <link href="https://feyy.github.io/2016/01/data-type-toString/"/>
-    <id>https://feyy.github.io/2016/01/data-type-toString/</id>
+    <link href="http://feyy.github.io/2016/01/data-type-toString/"/>
+    <id>http://feyy.github.io/2016/01/data-type-toString/</id>
     <published>2016-01-16T18:22:16.000Z</published>
     <updated>2016-09-08T14:23:50.000Z</updated>
     
@@ -797,14 +797,14 @@
     </summary>
     
     
-      <category term="javascript" scheme="https://feyy.github.io/tags/javascript/"/>
+      <category term="javascript" scheme="http://feyy.github.io/tags/javascript/"/>
     
   </entry>
   
   <entry>
     <title>Object in ES5</title>
-    <link href="https://feyy.github.io/2016/01/object-es5/"/>
-    <id>https://feyy.github.io/2016/01/object-es5/</id>
+    <link href="http://feyy.github.io/2016/01/object-es5/"/>
+    <id>http://feyy.github.io/2016/01/object-es5/</id>
     <published>2016-01-15T19:21:21.000Z</published>
     <updated>2016-09-08T14:23:50.000Z</updated>
     
@@ -848,16 +848,16 @@
     </summary>
     
     
-      <category term="object" scheme="https://feyy.github.io/tags/object/"/>
+      <category term="object" scheme="http://feyy.github.io/tags/object/"/>
     
-      <category term="es5" scheme="https://feyy.github.io/tags/es5/"/>
+      <category term="es5" scheme="http://feyy.github.io/tags/es5/"/>
     
   </entry>
   
   <entry>
     <title>Generator Basics</title>
-    <link href="https://feyy.github.io/2016/01/generator-basic/"/>
-    <id>https://feyy.github.io/2016/01/generator-basic/</id>
+    <link href="http://feyy.github.io/2016/01/generator-basic/"/>
+    <id>http://feyy.github.io/2016/01/generator-basic/</id>
     <published>2016-01-14T16:24:53.000Z</published>
     <updated>2016-09-08T14:23:50.000Z</updated>
     
@@ -935,18 +935,18 @@
     </summary>
     
     
-      <category term="javascript" scheme="https://feyy.github.io/tags/javascript/"/>
+      <category term="javascript" scheme="http://feyy.github.io/tags/javascript/"/>
     
-      <category term="ES6" scheme="https://feyy.github.io/tags/ES6/"/>
+      <category term="ES6" scheme="http://feyy.github.io/tags/ES6/"/>
     
-      <category term="generator" scheme="https://feyy.github.io/tags/generator/"/>
+      <category term="generator" scheme="http://feyy.github.io/tags/generator/"/>
     
   </entry>
   
   <entry>
     <title>pm2基础命令</title>
-    <link href="https://feyy.github.io/2016/01/pm2-basic/"/>
-    <id>https://feyy.github.io/2016/01/pm2-basic/</id>
+    <link href="http://feyy.github.io/2016/01/pm2-basic/"/>
+    <id>http://feyy.github.io/2016/01/pm2-basic/</id>
     <published>2016-01-13T17:39:54.000Z</published>
     <updated>2016-09-08T14:23:50.000Z</updated>
     
@@ -970,9 +970,9 @@
     </summary>
     
     
-      <category term="pm2" scheme="https://feyy.github.io/tags/pm2/"/>
+      <category term="pm2" scheme="http://feyy.github.io/tags/pm2/"/>
     
-      <category term="node" scheme="https://feyy.github.io/tags/node/"/>
+      <category term="node" scheme="http://feyy.github.io/tags/node/"/>
     
   </entry>
   
