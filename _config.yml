@@ -73,3 +73,7 @@ deploy:
   repo: https://github.com/feyy/feyy.github.io
   branch: master
   message: FE の YY
+- type: git
+  repo: https://git.coding.net/feyy/feyy.git
+  branch: master
+  message: FE の YY
