@@ -15,6 +15,14 @@
     </url>
 
     <url>
+        <loc>http://feyy.github.io/2016/01/animation-performance-1/</loc>
+        <lastmod>2016-09-08T14:23:50.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://feyy.github.io/2016/01/animation-performance-2/</loc>
         <lastmod>2016-09-08T14:23:50.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -24,14 +32,6 @@
 
     <url>
         <loc>http://feyy.github.io/2016/01/commit-message/</loc>
-        <lastmod>2016-09-08T14:23:50.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://feyy.github.io/2016/01/animation-performance-1/</loc>
         <lastmod>2016-09-08T14:23:50.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -79,7 +79,7 @@
     </url>
 
     <url>
-        <loc>http://feyy.github.io/2016/01/simple-stress-testing-tool/</loc>
+        <loc>http://feyy.github.io/2016/01/pm2-senior-1/</loc>
         <lastmod>2016-09-08T14:23:50.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -87,7 +87,7 @@
     </url>
 
     <url>
-        <loc>http://feyy.github.io/2016/01/pm2-senior-1/</loc>
+        <loc>http://feyy.github.io/2016/01/simple-stress-testing-tool/</loc>
         <lastmod>2016-09-08T14:23:50.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
