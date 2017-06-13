@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Commit message 和 Change log | FEYY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="此处不得不赞叹一下阮老师的文笔和高产，膜拜中…🚬浏览过不少开源项目了，也算是github的深水用户，但还真没有太注意人家的提交注释(commit message)有什么不一样，以及每次发版时长长的chang logs。感谢小伟哥的指导，技术视野上的差距还是蛮大的，刚把得💪 先来张angular-ui-bootstrap库的commit截图 不管多少人提交代码，总是那么清晰爽快。">
+<meta name="keywords" content="feyy, fe, 前端，前端日记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Commit message 和 Change log">
+<meta property="og:url" content="https://feyy.github.io/2016/01/commit-message/index.html">
+<meta property="og:site_name" content="FEYY">
+<meta property="og:description" content="此处不得不赞叹一下阮老师的文笔和高产，膜拜中…🚬浏览过不少开源项目了，也算是github的深水用户，但还真没有太注意人家的提交注释(commit message)有什么不一样，以及每次发版时长长的chang logs。感谢小伟哥的指导，技术视野上的差距还是蛮大的，刚把得💪 先来张angular-ui-bootstrap库的commit截图 不管多少人提交代码，总是那么清晰爽快。">
+<meta property="og:image" content="http://i.niupic.com/images/2016/01/23/TF2n76.png">
+<meta property="og:updated_time" content="2016-09-08T14:23:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Commit message 和 Change log">
+<meta name="twitter:description" content="此处不得不赞叹一下阮老师的文笔和高产，膜拜中…🚬浏览过不少开源项目了，也算是github的深水用户，但还真没有太注意人家的提交注释(commit message)有什么不一样，以及每次发版时长长的chang logs。感谢小伟哥的指导，技术视野上的差距还是蛮大的，刚把得💪 先来张angular-ui-bootstrap库的commit截图 不管多少人提交代码，总是那么清晰爽快。">
+<meta name="twitter:image" content="http://i.niupic.com/images/2016/01/23/TF2n76.png">
+  
+    <link rel="alternative" href="/atom.xml" title="FEYY" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/uploads/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?3fde8a655b660fa08001fe000ba380a0";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/uploads/photo.png" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">felix</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">A FE の YY everyday！</p>
+        
+        
+            <div class="search">
+                <script>
+                  (function() {
+                    var cx = '000701910795822237800:b-rmwbidat0';
+                    var gcse = document.createElement('script');
+                    gcse.type = 'text/javascript';
+                    gcse.async = true;
+                    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+                        '//cse.google.com/cse.js?cx=' + cx;
+                    var s = document.getElementsByTagName('script')[0];
+                    s.parentNode.insertBefore(gcse, s);
+                    
+                    var timerCount = 0;
+                    (function addPlaceholder() {
+                        var gscInput = document.querySelector('#gsc-i-id1');
+                        if (gscInput) {
+                            gscInput.setAttribute('placeholder', 'search ...')
+                        } else if (++timerCount < 20) {
+                            setTimeout(addPlaceholder, 500);
+                        }
+                    })();
+
+                  })();
+                </script>
+                <gcse:search></gcse:search>
+            </div>
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:692071586@qq.com" title="Email"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2509315840" title="新浪微博"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/feyy" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/animation/" style="font-size: 15px;">animation</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/books/" style="font-size: 15px;">books</a> <a href="/tags/es5/" style="font-size: 10px;">es5</a> <a href="/tags/es6/" style="font-size: 10px;">es6</a> <a href="/tags/foods/" style="font-size: 10px;">foods</a> <a href="/tags/generator/" style="font-size: 10px;">generator</a> <a href="/tags/input-file/" style="font-size: 10px;">input-file</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/node/" style="font-size: 10px;">node</a> <a href="/tags/object/" style="font-size: 15px;">object</a> <a href="/tags/performance/" style="font-size: 15px;">performance</a> <a href="/tags/pm2/" style="font-size: 15px;">pm2</a> <a href="/tags/test/" style="font-size: 10px;">test</a> <a href="/tags/tool/" style="font-size: 10px;">tool</a>
+                    </div>
+                </section>
+                
+                
+                
+
+                
+                
+                <section class="switch-part switch-part3">
+                
+                    <div id="js-aboutme">专注于前端。生命不息，奋斗不止！</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">felix</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img lazy-src="/uploads/photo.png" class="js-avatar">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">felix</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">A FE の YY everyday！</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:692071586@qq.com" title="Email"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2509315840" title="新浪微博"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/feyy" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-2016/01/commit-message" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/commit-message/" class="article-date">
+      <time datetime="2016-01-22T19:23:08.000Z" itemprop="datePublished">2016-01-23</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Commit message 和 Change log
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>此处不得不赞叹一下阮老师的文笔和高产，膜拜中…🚬<br>浏览过不少开源项目了，也算是github的深水用户，但还真没有太注意人家的提交注释(commit message)有什么不一样，以及每次发版时长长的chang logs。感谢小伟哥的指导，技术视野上的差距还是蛮大的，刚把得💪</p>
+<p>先来张<a href="https://github.com/angular-ui/bootstrap" target="_blank" rel="external">angular-ui-bootstrap</a>库的commit截图<br><img src="http://i.niupic.com/images/2016/01/23/TF2n76.png" alt="ui-bootstrap commit message"></p>
+<p>不管多少人提交代码，总是那么清晰爽快。<br><a id="more"></a></p>
+<h2 id="commit-message-格式"><a href="#commit-message-格式" class="headerlink" title="commit message 格式"></a>commit message 格式</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;<span class="built_in">type</span>&gt;(&lt;scope&gt;): &lt;subject&gt;</div><div class="line">// 空一行</div><div class="line">&lt;body&gt;</div><div class="line">// 空一行</div><div class="line">&lt;footer&gt;</div></pre></td></tr></table></figure>
+<p>其中，Header 是必需的，Body 和 Footer 可以省略。<br>Header部分：type（必需）、scope（可选）和subject（必需）<br>不管是哪一个部分，任何一行都不得超过72个字符（或100个字符）。这是为了避免自动换行影响美观。</p>
+<h3 id="type"><a href="#type" class="headerlink" title="type"></a>type</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">feat            <span class="comment"># 新功能（feature）</span></div><div class="line">fix             <span class="comment"># 修补bug</span></div><div class="line">docs            <span class="comment"># 文档（documentation）</span></div><div class="line">style           <span class="comment"># 格式（不影响代码运行的变动）</span></div><div class="line">refactor        <span class="comment"># 重构（即不是新增功能，也不是修改bug的代码变动）</span></div><div class="line"><span class="built_in">test</span>            <span class="comment"># 增加测试</span></div><div class="line">chore           <span class="comment"># 构建过程或辅助工具的变动</span></div></pre></td></tr></table></figure>
+<p>7种类型基本覆盖了所有需求，好开心。</p>
+<p>如果type为feat和fix，则该 commit 将肯定出现在 Change log 之中。其他情况（docs、chore、style、refactor、test）由你决定，要不要放入 Change log，建议是不要。</p>
+<h3 id="scope"><a href="#scope" class="headerlink" title="scope"></a>scope</h3><p>scope用于说明 commit 影响的范围，比如数据层、控制层、视图层等等，视项目不同而不同。</p>
+<h3 id="subject"><a href="#subject" class="headerlink" title="subject"></a>subject</h3><p>subject是 commit 目的的简短描述，不超过50个字符。</p>
+<h3 id="body"><a href="#body" class="headerlink" title="body"></a>body</h3><p>Body 部分是对本次 commit 的详细描述，可以分成多行</p>
+<ul>
+<li>以动词开头，使用第一人称现在时，比如change，而不是changed或changes</li>
+<li>第一个字母小写</li>
+<li>结尾不加句号（.）</li>
+</ul>
+<h3 id=""><a href="#" class="headerlink" title=""></a>footer</h3><ul>
+<li>不兼容变动</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">BREAKING CHANGE:</div></pre></td></tr></table></figure>
+<ul>
+<li>关闭 Issue</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Closes <span class="comment">#234</span></div></pre></td></tr></table></figure>
+<h2 id="Commitizen"><a href="#Commitizen" class="headerlink" title="Commitizen"></a>Commitizen</h2><p><a href="https://github.com/commitizen/cz-cli" target="_blank" rel="external">Commitizen</a>是一个撰写合格 Commit message 的工具。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">npm install -g commitizen</div><div class="line"><span class="built_in">cd</span> &#123;target&#125;</div><div class="line">commitizen init cz-conventional-changelog --save --save-exact</div></pre></td></tr></table></figure>
+<h2 id="validate-commit-msg"><a href="#validate-commit-msg" class="headerlink" title="validate-commit-msg"></a>validate-commit-msg</h2><p><a href="https://github.com/kentcdodds/validate-commit-msg" target="_blank" rel="external">validate-commit-msg</a> 用于检查 Node 项目的 Commit message 是否符合格式。</p>
+<h2 id="Change-log"><a href="#Change-log" class="headerlink" title="Change log"></a>Change log</h2><p><a href="https://github.com/ajoslin/conventional-changelog" target="_blank" rel="external">conventional-changelog</a> 就是生成 Change log 的工具，运行下面的命令即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">npm install -g conventional-changelog</div><div class="line"><span class="built_in">cd</span> my-project</div><div class="line">conventional-changelog -p angular -i CHANGELOG.md -w</div></pre></td></tr></table></figure>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html" target="_blank" rel="external">Commit message 和 Change log 编写指南</a></li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/01/commit-message/">Commit message 和 Change log</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 felix 的个人博客">felix</a></p>
+        <p><span>发布时间:</span>2016年01月23日 - 03时23分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/01/commit-message/" title="Commit message 和 Change log">https://feyy.github.io/2016/01/commit-message/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://feyy.github.io/2016/01/commit-message/　　作者: felix" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/01/pm2-senior-1/">
+                    pm2 senior (一)
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/01/input-file-customer/">
+                    input-file定制样式
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#commit-message-格式"><span class="toc-number">1.</span> <span class="toc-text">commit message 格式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#type"><span class="toc-number">1.1.</span> <span class="toc-text">type</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#scope"><span class="toc-number">1.2.</span> <span class="toc-text">scope</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#subject"><span class="toc-number">1.3.</span> <span class="toc-text">subject</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#body"><span class="toc-number">1.4.</span> <span class="toc-text">body</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#"><span class="toc-number">1.5.</span> <span class="toc-text">footer</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Commitizen"><span class="toc-number">2.</span> <span class="toc-text">Commitizen</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#validate-commit-msg"><span class="toc-number">3.</span> <span class="toc-text">validate-commit-msg</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Change-log"><span class="toc-number">4.</span> <span class="toc-text">Change log</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-number">5.</span> <span class="toc-text">参考文献</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+    <div id="gitment-container" style="margin: 0 30px;"></div>
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/01/pm2-senior-1/" title="上一篇: pm2 senior (一)">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/01/input-file-customer/" title="下一篇: input-file定制样式">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/06/object-freeze/">object冻结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/coke-chicken-wings/">可乐鸡翅</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/efficient-speech-note/">高效演讲 -- 笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/es6-cheat-sheet/">ES6 CHEAT SHEET</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/efficient-speech/">高效演讲 -- 精彩书摘</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/environment-variable/">environment variable</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/pm2-senior-1/">pm2 senior (一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/commit-message/">Commit message 和 Change log</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/input-file-customer/">input-file定制样式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/simple-stress-testing-tool/">simple stress testing tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/animation-performance-2/">动画性能（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/animation-performance-1/">动画性能（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/data-type-toString/">javascript中的数据类型判断</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/object-es5/">Object in ES5</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/generator-basic/">Generator Basics</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/pm2-basic/">pm2基础命令</a></li></ul>
+    <script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 felix
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        <div class="visit">
+            <span id="busuanzi_container_site_pv" style='display:none'>
+                <span id="site-visit" >本站到访数: 
+                    <span id="busuanzi_value_site_uv"></span>
+                </span>
+            </span>
+            <span id="busuanzi_container_page_pv" style='display:none'>
+                <span id="page-visit">, 本页阅读量: 
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+            </span>
+        </div>
+    </div>
+</footer>
+    </div>
+    <script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 10;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  owner: 'feyy',
+  repo: 'feyy.github.io',
+  oauth: {
+    client_id: '0e9fc4241a1d32744a60',
+    client_secret: '7a04465818a1c1bdb8eb74d713a2e17348ea1b70',
+  },
+})
+gitment.render('gitment-container')
+</script>
+  </div>
+<!-- 百度站长链接自动推送 -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+            
+</body>
+</html>

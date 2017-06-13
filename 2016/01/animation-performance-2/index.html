@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>动画性能（二） | FEYY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="水了好几天的日记了，居然忘了最重要的YY环节… 动画帧和帧率动画是由一帧一帧构成的。帧可以理解为是动画过程的一张张照片。动画的性能(视觉上的卡顿程度)与帧率有关，也就是1s钟内有多少帧。60fps表示1s钟有60帧。我们一般使用的显示器刷新率是60Hz，也就是1s钟刷新60次。对于人眼来说就是1s钟看到了60张照片，由于人眼的视觉暂留使得两张照片得以连贯过渡，从而形成动画。说成帧率的话也就是60f">
+<meta name="keywords" content="animation,performance">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动画性能（二）">
+<meta property="og:url" content="https://feyy.github.io/2016/01/animation-performance-2/index.html">
+<meta property="og:site_name" content="FEYY">
+<meta property="og:description" content="水了好几天的日记了，居然忘了最重要的YY环节… 动画帧和帧率动画是由一帧一帧构成的。帧可以理解为是动画过程的一张张照片。动画的性能(视觉上的卡顿程度)与帧率有关，也就是1s钟内有多少帧。60fps表示1s钟有60帧。我们一般使用的显示器刷新率是60Hz，也就是1s钟刷新60次。对于人眼来说就是1s钟看到了60张照片，由于人眼的视觉暂留使得两张照片得以连贯过渡，从而形成动画。说成帧率的话也就是60f">
+<meta property="og:image" content="http://www.html5rocks.com/en/tutorials/speed/high-performance-animations/devtools-waterfall.jpg">
+<meta property="og:updated_time" content="2016-09-08T14:23:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="动画性能（二）">
+<meta name="twitter:description" content="水了好几天的日记了，居然忘了最重要的YY环节… 动画帧和帧率动画是由一帧一帧构成的。帧可以理解为是动画过程的一张张照片。动画的性能(视觉上的卡顿程度)与帧率有关，也就是1s钟内有多少帧。60fps表示1s钟有60帧。我们一般使用的显示器刷新率是60Hz，也就是1s钟刷新60次。对于人眼来说就是1s钟看到了60张照片，由于人眼的视觉暂留使得两张照片得以连贯过渡，从而形成动画。说成帧率的话也就是60f">
+<meta name="twitter:image" content="http://www.html5rocks.com/en/tutorials/speed/high-performance-animations/devtools-waterfall.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="FEYY" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/uploads/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?3fde8a655b660fa08001fe000ba380a0";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/uploads/photo.png" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">felix</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">A FE の YY everyday！</p>
+        
+        
+            <div class="search">
+                <script>
+                  (function() {
+                    var cx = '000701910795822237800:b-rmwbidat0';
+                    var gcse = document.createElement('script');
+                    gcse.type = 'text/javascript';
+                    gcse.async = true;
+                    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+                        '//cse.google.com/cse.js?cx=' + cx;
+                    var s = document.getElementsByTagName('script')[0];
+                    s.parentNode.insertBefore(gcse, s);
+                    
+                    var timerCount = 0;
+                    (function addPlaceholder() {
+                        var gscInput = document.querySelector('#gsc-i-id1');
+                        if (gscInput) {
+                            gscInput.setAttribute('placeholder', 'search ...')
+                        } else if (++timerCount < 20) {
+                            setTimeout(addPlaceholder, 500);
+                        }
+                    })();
+
+                  })();
+                </script>
+                <gcse:search></gcse:search>
+            </div>
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:692071586@qq.com" title="Email"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2509315840" title="新浪微博"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/feyy" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/animation/" style="font-size: 15px;">animation</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/books/" style="font-size: 15px;">books</a> <a href="/tags/es5/" style="font-size: 10px;">es5</a> <a href="/tags/es6/" style="font-size: 10px;">es6</a> <a href="/tags/foods/" style="font-size: 10px;">foods</a> <a href="/tags/generator/" style="font-size: 10px;">generator</a> <a href="/tags/input-file/" style="font-size: 10px;">input-file</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/node/" style="font-size: 10px;">node</a> <a href="/tags/object/" style="font-size: 15px;">object</a> <a href="/tags/performance/" style="font-size: 15px;">performance</a> <a href="/tags/pm2/" style="font-size: 15px;">pm2</a> <a href="/tags/test/" style="font-size: 10px;">test</a> <a href="/tags/tool/" style="font-size: 10px;">tool</a>
+                    </div>
+                </section>
+                
+                
+                
+
+                
+                
+                <section class="switch-part switch-part3">
+                
+                    <div id="js-aboutme">专注于前端。生命不息，奋斗不止！</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">felix</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img lazy-src="/uploads/photo.png" class="js-avatar">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">felix</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">A FE の YY everyday！</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:692071586@qq.com" title="Email"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2509315840" title="新浪微博"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/feyy" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-2016/01/animation-performance-2" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/animation-performance-2/" class="article-date">
+      <time datetime="2016-01-18T17:12:13.000Z" itemprop="datePublished">2016-01-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      动画性能（二）
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/animation/">animation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/performance/">performance</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>水了好几天的日记了，居然忘了最重要的YY环节…</p>
+<h2 id="动画帧和帧率"><a href="#动画帧和帧率" class="headerlink" title="动画帧和帧率"></a>动画帧和帧率</h2><p>动画是由一帧一帧构成的。帧可以理解为是动画过程的一张张照片。<br>动画的性能(视觉上的卡顿程度)与帧率有关，也就是1s钟内有多少帧。60fps表示1s钟有60帧。<br>我们一般使用的显示器刷新率是60Hz，也就是1s钟刷新60次。对于人眼来说就是1s钟看到了60张照片，由于人眼的视觉暂留使得两张照片得以连贯过渡，从而形成动画。说成帧率的话也就是60fps，因而60fps是所有web动画追求的极致。<br>通常来说动画如果低于30fps将无法接受。强调动画性能在某种程度上就是获得更高的帧率。</p>
+<h2 id="帧绘制"><a href="#帧绘制" class="headerlink" title="帧绘制"></a>帧绘制</h2><p>那么在web中，每一帧的绘制流程是怎样的呢？</p>
+<ol>
+<li>javascript执行（function call）</li>
+<li>计算需要被加载到节点上的样式结果（Recalculate style–样式重计算） </li>
+<li>为每个节点生成图形和位置（Layout–回流和重布局） </li>
+<li>将每个节点填充到图层中（Paint Setup和Paint–重绘） </li>
+<li>组合图层到页面上（Composite Layers–图层重组）</li>
+</ol>
+<p><img src="http://www.html5rocks.com/en/tutorials/speed/high-performance-animations/devtools-waterfall.jpg" alt="frame-flow"><br>动画性能优化的核心也就是<strong>缩小每帧绘制所需要的时间，尽量在1/60s内完成，从而达到60fps</strong>。<br>上面的步骤有些是可以省略的，优化点就是去省略或者压缩每个点所需的时间。<br>如变换（ transform ）和透明度（ opacity ）的改变就不会触发2、3、4过程。<br><a id="more"></a></p>
+<h2 id="触发样式重计算"><a href="#触发样式重计算" class="headerlink" title="触发样式重计算"></a>触发样式重计算</h2><p>CSS类的改变会触发样式重计算。后面的流程当然一个不可能少，因而开销很大。</p>
+<h2 id="CSS属性分类"><a href="#CSS属性分类" class="headerlink" title="CSS属性分类"></a>CSS属性分类</h2><p>不同CSS属性的改变会触发不同的帧绘制流程。</p>
+<h3 id="触发重布局的属性"><a href="#触发重布局的属性" class="headerlink" title="触发重布局的属性"></a>触发重布局的属性</h3><p>当你改变他时，会需要重新布局（这也意味着需要重新计算其他被影响的节点的位置和大小）。被影响的DOM树越大（可见节点），重绘所需要的时间就会越长。</p>
+<ul>
+<li>盒模型相关属性：width, height, padding, margin, display, border-width, border, min-height</li>
+<li>定位属性和浮动：top, bottom, left, right, position, float, clear</li>
+<li>改变内部文字结构：text-align, overflow-y, font-weight, overflow, font-family, line-height, vertival-align, white-space, font-size</li>
+</ul>
+<h3 id="只触发重绘的属性"><a href="#只触发重绘的属性" class="headerlink" title="只触发重绘的属性"></a>只触发重绘的属性</h3><p>color, border-style, border-radius, visibility, text-decoration, background, background-image, background-position, background-repeat, background-size, outline-color, outline, outline-style, outline-width, box-shadow</p>
+<p><strong>手机就算重绘也很慢</strong><br>在重绘时，这些节点会被加载到GPU中进行重绘，这对移动设备如手机的影响还是很大的。因为CPU不如台式机或笔记本电脑，所以绘画巫妖的时间更长。而且CPU与GPU之间的有较大的带宽限制，所以纹理的上传需要一定时间</p>
+<h3 id="触发图层重组的属性"><a href="#触发图层重组的属性" class="headerlink" title="触发图层重组的属性"></a>触发图层重组的属性</h3><p>opacity, transform<br>可见使用opacity和transform(translate, rotate, scale…)创建动画是开销最小的方式。</p>
+<h2 id="JS动画"><a href="#JS动画" class="headerlink" title="JS动画"></a>JS动画</h2><p>前面提到过显示器刷新率多为60Hz，那么要获得更流畅的动画体验，动画的刷新时间和显示器刷新应该吻合。纯CSS动画由浏览器内部机制去保证，那么js该如何做呢。<br>一个新的方法<code>requestAnimationFrame</code>, 该方法告诉浏览器JavaScript想发起一个动画帧，然后在动画帧绘制之前，需要做一些动作，这样浏览器可以根据需要来优化自己的mainloop机制和调用时间点，以达到较好地平衡效果。</p>
+<h2 id="YY"><a href="#YY" class="headerlink" title="YY"></a>YY</h2><p>为了实现高效的动画我们应该这样来：</p>
+<ul>
+<li>为复杂动画元素创建独立的渲染层</li>
+<li>按照帧绘制流程优先选用影响最小的CSS属性(opacity, transform)</li>
+<li>js动画应使用<code>requestAnimationFrame</code>来控制绘制时机</li>
+<li>js动画的每帧计算时间应该小于1/60s</li>
+</ul>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://www.tuicool.com/articles/NBbQjy3" target="_blank" rel="external">前端性能优化（CSS动画篇）</a></li>
+<li><a href="http://www.html5rocks.com/zh/tutorials/speed/layers/" target="_blank" rel="external">Accelerated Rendering in Chrome</a></li>
+<li><a href="http://www.html5rocks.com/en/tutorials/speed/high-performance-animations/" target="_blank" rel="external">High Performance Animations</a></li>
+<li><a href="http://blog.csdn.net/milado_nju/article/details/8101188" target="_blank" rel="external">Chromium渲染主循环(mainloop)和requestAnimationFrame</a></li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/01/animation-performance-2/">动画性能（二）</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 felix 的个人博客">felix</a></p>
+        <p><span>发布时间:</span>2016年01月19日 - 01时12分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/01/animation-performance-2/" title="动画性能（二）">https://feyy.github.io/2016/01/animation-performance-2/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://feyy.github.io/2016/01/animation-performance-2/　　作者: felix" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/01/simple-stress-testing-tool/">
+                    simple stress testing tool
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/01/animation-performance-1/">
+                    动画性能（一）
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#动画帧和帧率"><span class="toc-number">1.</span> <span class="toc-text">动画帧和帧率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#帧绘制"><span class="toc-number">2.</span> <span class="toc-text">帧绘制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#触发样式重计算"><span class="toc-number">3.</span> <span class="toc-text">触发样式重计算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CSS属性分类"><span class="toc-number">4.</span> <span class="toc-text">CSS属性分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#触发重布局的属性"><span class="toc-number">4.1.</span> <span class="toc-text">触发重布局的属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#只触发重绘的属性"><span class="toc-number">4.2.</span> <span class="toc-text">只触发重绘的属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#触发图层重组的属性"><span class="toc-number">4.3.</span> <span class="toc-text">触发图层重组的属性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JS动画"><span class="toc-number">5.</span> <span class="toc-text">JS动画</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#YY"><span class="toc-number">6.</span> <span class="toc-text">YY</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-number">7.</span> <span class="toc-text">参考文献</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+    <div id="gitment-container" style="margin: 0 30px;"></div>
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/01/simple-stress-testing-tool/" title="上一篇: simple stress testing tool">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/01/animation-performance-1/" title="下一篇: 动画性能（一）">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/06/object-freeze/">object冻结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/coke-chicken-wings/">可乐鸡翅</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/efficient-speech-note/">高效演讲 -- 笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/es6-cheat-sheet/">ES6 CHEAT SHEET</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/efficient-speech/">高效演讲 -- 精彩书摘</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/environment-variable/">environment variable</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/pm2-senior-1/">pm2 senior (一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/commit-message/">Commit message 和 Change log</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/input-file-customer/">input-file定制样式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/simple-stress-testing-tool/">simple stress testing tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/animation-performance-2/">动画性能（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/animation-performance-1/">动画性能（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/data-type-toString/">javascript中的数据类型判断</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/object-es5/">Object in ES5</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/generator-basic/">Generator Basics</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/pm2-basic/">pm2基础命令</a></li></ul>
+    <script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 felix
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        <div class="visit">
+            <span id="busuanzi_container_site_pv" style='display:none'>
+                <span id="site-visit" >本站到访数: 
+                    <span id="busuanzi_value_site_uv"></span>
+                </span>
+            </span>
+            <span id="busuanzi_container_page_pv" style='display:none'>
+                <span id="page-visit">, 本页阅读量: 
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+            </span>
+        </div>
+    </div>
+</footer>
+    </div>
+    <script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 10;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  owner: 'feyy',
+  repo: 'feyy.github.io',
+  oauth: {
+    client_id: '0e9fc4241a1d32744a60',
+    client_secret: '7a04465818a1c1bdb8eb74d713a2e17348ea1b70',
+  },
+})
+gitment.render('gitment-container')
+</script>
+  </div>
+<!-- 百度站长链接自动推送 -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+            
+</body>
+</html>

@@ -1,0 +1,979 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>FEYY</title>
+  <subtitle>A FE の YY everyday！</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://feyy.github.io/"/>
+  <updated>2017-06-12T17:55:30.000Z</updated>
+  <id>https://feyy.github.io/</id>
+  
+  <author>
+    <name>felix</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>object冻结</title>
+    <link href="https://feyy.github.io/2017/06/object-freeze/"/>
+    <id>https://feyy.github.io/2017/06/object-freeze/</id>
+    <published>2017-06-12T15:56:33.000Z</published>
+    <updated>2017-06-12T17:55:30.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>javascript如何实现object冻结，保证一个不可变的object。</p>
+<h3 id="const-常量"><a href="#const-常量" class="headerlink" title="const 常量"></a>const 常量</h3><p>const声明的常量的值不能通过重新赋值来改变，并且不能重新声明[声明时必须初始化]。针对的是这个变量本身，而不是变量内部的值，可直接理解为针对变量名。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> OBJ = &#123;<span class="attr">test</span>: <span class="number">123</span>&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 重复声明常量会报错</span></div><div class="line"><span class="keyword">var</span> OBJ;</div><div class="line"><span class="keyword">let</span> OBJ;</div><div class="line"><span class="keyword">const</span> OBJ = &#123;<span class="attr">test</span>: <span class="number">123</span>&#125;</div><div class="line"></div><div class="line"><span class="comment">// 给常量赋值会报错</span></div><div class="line">OBJ = <span class="string">'test'</span>;</div><div class="line"></div><div class="line"><span class="comment">// 对里面的值的操作确没有限制</span></div><div class="line">OBJ.test = <span class="number">1234</span>;</div><div class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(OBJ, <span class="string">'test'</span>); <span class="comment">// &#123;value: 1234, writable: true, enumerable: true, configurable: true&#125;</span></div></pre></td></tr></table></figure>
+<h3 id="extensible-扩展性-Object-isExtensible-Object-preventExtensions"><a href="#extensible-扩展性-Object-isExtensible-Object-preventExtensions" class="headerlink" title="extensible 扩展性 [Object.isExtensible, Object.preventExtensions]"></a>extensible 扩展性 [Object.isExtensible, Object.preventExtensions]</h3><p>如果一个对象可以添加新的属性，则这个对象是可扩展的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> OBJ = &#123;<span class="attr">test</span>: <span class="number">123</span>&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 监测对象是否可扩展</span></div><div class="line"><span class="built_in">Object</span>.isExtensible(OBJ); <span class="comment">// true</span></div><div class="line"></div><div class="line">OBJ.test1 = <span class="number">123</span>; <span class="comment">//&#123;test: 123, test1: 123&#125;</span></div><div class="line"></div><div class="line"><span class="comment">// 使对象不可扩展</span></div><div class="line"><span class="built_in">Object</span>.preventExtensions(OBJ);</div><div class="line"></div><div class="line">OBJ.test2 = <span class="number">123</span>; <span class="comment">//&#123;test: 123, test1: 123&#125;</span></div><div class="line"></div><div class="line"><span class="built_in">Object</span>.isExtensible(OBJ); <span class="comment">// false</span></div></pre></td></tr></table></figure>
+<ul>
+<li>不可扩展的对象的属性通常仍然可以被删除。</li>
+<li>尝试给一个不可扩展对象添加新属性的操作将会失败，不过可能是静默失败，也可能会抛出 TypeError 异常（严格模式下）。</li>
+<li>Object.preventExtensions 只能阻止一个对象不能再添加新的自身属性，仍然可以为该对象的原型添加属性。</li>
+</ul>
+<h3 id="seal-密封性-Object-isSealed-Object-seal"><a href="#seal-密封性-Object-isSealed-Object-seal" class="headerlink" title="seal 密封性 [Object.isSealed, Object.seal]"></a>seal 密封性 [Object.isSealed, Object.seal]</h3><p>密封对象是指那些不能添加新的属性，不能删除已有属性，以及不能修改已有属性的可枚举性（enumerable）、可配置性（configurable）[属性是否可删除以及属性描述特性是否可修改]、可写性（writable），但可能可以修改已有属性的值的对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> OBJ = &#123;<span class="attr">test</span>:<span class="number">123</span>&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 使对象不可扩展</span></div><div class="line"><span class="built_in">Object</span>.preventExtensions(OBJ);</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.isSealed(OBJ); <span class="comment">// false</span></div><div class="line"></div><div class="line"><span class="built_in">Object</span>.defineProperty(OBJ, <span class="string">"test"</span>, &#123;<span class="attr">configurable</span> : <span class="literal">false</span>&#125;);</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.isSealed(OBJ); <span class="comment">// true, 也可以直接使用Object.seal(OBJ);</span></div><div class="line"></div><div class="line">OBJ.test = <span class="number">1234</span>; <span class="comment">// &#123;test: 1234&#125;</span></div></pre></td></tr></table></figure>
+<ul>
+<li>被密封的对象，就是在不可扩展基础上讲属性描述符configurable设置为false;</li>
+<li>同时，被密封的对象，仍然有机会改变属性的值。只不过对于此对象本身而言，不可以再扩展新的属性，不可以更改已有属性的配置信息。</li>
+</ul>
+<h3 id="freeze-冻结-Object-isFrozen-Object-freeze"><a href="#freeze-冻结-Object-isFrozen-Object-freeze" class="headerlink" title="freeze 冻结 [Object.isFrozen, Object.freeze]"></a>freeze 冻结 [Object.isFrozen, Object.freeze]</h3><p>冻结（frozen）是指它不可扩展，所有属性都是不可配置的（non-configurable），且所有数据属性（data properties, 另一种是访问器属性）都是不可写的（non-writable）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> OBJ = &#123;<span class="attr">test</span>:<span class="number">123</span>&#125;;</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.freeze(OBJ);</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(OBJ, <span class="string">'test'</span>); <span class="comment">// &#123;value: 123, writable: false, enumerable: true, configurable: false&#125;</span></div><div class="line"></div><div class="line"><span class="comment">// 对冻结对象的任何操作都会失败</span></div><div class="line">OBJ.name = <span class="string">"Eros"</span>; <span class="comment">// 改写属性值，非严格模式下静默失败;</span></div><div class="line">OBJ.age = <span class="number">18</span>; <span class="comment">// 扩展属性值，非严格模式下静默失败;</span></div><div class="line"><span class="built_in">Object</span>.defineProperty(OBJ,<span class="string">"test"</span>,&#123;<span class="attr">value</span>: <span class="string">"Eros"</span>&#125;); <span class="comment">// 使用defineProperty会直接报错</span></div></pre></td></tr></table></figure>
+<ul>
+<li>这种层面的冻结，只是浅冻结。如果对象里面还嵌套有对象，那么这个内部对象丝毫不受影响。</li>
+</ul>
+<h3 id="递归冻结"><a href="#递归冻结" class="headerlink" title="递归冻结"></a>递归冻结</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.prototype.deepFreeze = <span class="built_in">Object</span>.prototype.deepFreeze || <span class="function"><span class="keyword">function</span> (<span class="params">o</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> prop, propKey;</div><div class="line">    <span class="built_in">Object</span>.freeze(o); <span class="comment">// 首先冻结第一层对象</span></div><div class="line">    <span class="keyword">for</span> (propKey <span class="keyword">in</span> o)&#123;</div><div class="line">        prop = o[propKey];</div><div class="line">        <span class="keyword">if</span>(!o.hasOwnProperty(propKey) || !(<span class="keyword">typeof</span> prop === <span class="string">"object"</span>) || <span class="built_in">Object</span>.isFrozen(prop))&#123;</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        &#125;</div><div class="line">        deepFreeze(prop); <span class="comment">// 递归</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://www.jianshu.com/p/23c003b044a5" target="_blank" rel="external">《JS冻结对象的《人间词话》 完美实现究竟有几层境界？》</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;javascript如何实现object冻结，保证一个不可变的object。&lt;/p&gt;
+&lt;h3 id=&quot;const-常量&quot;&gt;&lt;a href=&quot;#const-常量&quot; class=&quot;headerlink&quot; title=&quot;const 常量&quot;&gt;&lt;/a&gt;const 常量&lt;/h3&gt;&lt;p&gt;
+    
+    </summary>
+    
+    
+      <category term="javascript" scheme="https://feyy.github.io/tags/javascript/"/>
+    
+      <category term="object" scheme="https://feyy.github.io/tags/object/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>可乐鸡翅</title>
+    <link href="https://feyy.github.io/2016/07/coke-chicken-wings/"/>
+    <id>https://feyy.github.io/2016/07/coke-chicken-wings/</id>
+    <published>2016-07-07T15:56:33.000Z</published>
+    <updated>2016-09-08T14:23:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>黑暗料理——可乐鸡翅！<br><img src="http://7xtixz.com1.z0.glb.clouddn.com/blog/chickenWings/5.JPG" alt=""><br><a id="more"></a></p>
+<h6 id="材料准备"><a href="#材料准备" class="headerlink" title="材料准备"></a>材料准备</h6><p><img src="http://7xtixz.com1.z0.glb.clouddn.com/blog/chickenWings/1.JPG" alt=""></p>
+<h6 id="鸡翅加工"><a href="#鸡翅加工" class="headerlink" title="鸡翅加工"></a>鸡翅加工</h6><p><img src="http://7xtixz.com1.z0.glb.clouddn.com/blog/chickenWings/2.JPG" alt=""></p>
+<h6 id="腌制"><a href="#腌制" class="headerlink" title="腌制"></a>腌制</h6><p><img src="http://7xtixz.com1.z0.glb.clouddn.com/blog/chickenWings/3.JPG" alt=""></p>
+<h6 id="捞出"><a href="#捞出" class="headerlink" title="捞出"></a>捞出</h6><p><img src="http://7xtixz.com1.z0.glb.clouddn.com/blog/chickenWings/4.JPG" alt=""></p>
+<h6 id="翻炒"><a href="#翻炒" class="headerlink" title="翻炒"></a>翻炒</h6><p><img src="http://7xtixz.com1.z0.glb.clouddn.com/blog/chickenWings/6.jpg" alt=""></p>
+<h6 id="收汁"><a href="#收汁" class="headerlink" title="收汁"></a>收汁</h6><p><img src="http://7xtixz.com1.z0.glb.clouddn.com/blog/chickenWings/7.jpg" alt=""></p>
+<h6 id="成品"><a href="#成品" class="headerlink" title="成品"></a>成品</h6><p><img src="http://7xtixz.com1.z0.glb.clouddn.com/blog/chickenWings/5.JPG" alt=""></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://home.meishichina.com/recipe-16872.html" target="_blank" rel="external">可乐鸡翅</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;黑暗料理——可乐鸡翅！&lt;br&gt;&lt;img src=&quot;http://7xtixz.com1.z0.glb.clouddn.com/blog/chickenWings/5.JPG&quot; alt=&quot;&quot;&gt;&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="foods" scheme="https://feyy.github.io/tags/foods/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>高效演讲 -- 笔记</title>
+    <link href="https://feyy.github.io/2016/07/efficient-speech-note/"/>
+    <id>https://feyy.github.io/2016/07/efficient-speech-note/</id>
+    <published>2016-07-06T15:56:33.000Z</published>
+    <updated>2016-09-08T14:23:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>分享知识，推广项目，推销自己…演讲已经变得越来越重要，与我们的生活息息相关。那么如何进行高效演讲呢？<br><a id="more"></a></p>
+<h2 id="如何克服紧张"><a href="#如何克服紧张" class="headerlink" title="如何克服紧张"></a>如何克服紧张</h2><p>公共演讲时的紧张是人的动物性导致的，是与生俱来的。应该调整心态，抱着“送礼物”的态度去演讲，不要在乎听众要不要，要多少，重点是你送出去的是你觉得最nice的东西。不要希望你的演讲能取悦所有人，能让人记住一辈子，听众只会关心跟自己相关或者感兴趣的东西。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>准备步骤：</p>
+<ol>
+<li><p>确定你想要的结果</p>
+<ul>
+<li>带着目标去演讲。演讲结束时，他们将决定/同意… </li>
+<li>为了取得这一结果，他们需要知道1、2、3[三件事] </li>
+<li>他们需要感觉到1、2、3。为什么感觉很重要。<br>  决策不是由处理逻辑、事实、分析和连续过程事物的左脑做出的，而是由处理情感、概念、比喻、幽默和故事的右脑做出的。决策不是基于事实而是基于感觉。</li>
+</ul>
+</li>
+<li><p>找出关联性，他为什么要关注这件事</p>
+<p> 从听众出发去准备。给你自己三个合理、充分的理由，说明为什么听众应当在乎你说的内容。对他们有什么利害关系，他们会收获什么，失去什么，它为什么重要？</p>
+</li>
+<li><p>要点明确</p>
+<p> 清晰有力传达重点。用一句话表达你要传达的信息是什么。</p>
+</li>
+</ol>
+<h2 id="内容结构"><a href="#内容结构" class="headerlink" title="内容结构"></a>内容结构</h2><p><strong>坡道-&gt;发现-&gt;甜点</strong></p>
+<h3 id="坡道：巧妙开场，一句话引起听众最大的兴趣"><a href="#坡道：巧妙开场，一句话引起听众最大的兴趣" class="headerlink" title="坡道：巧妙开场，一句话引起听众最大的兴趣"></a>坡道：巧妙开场，一句话引起听众最大的兴趣</h3><ul>
+<li>七秒法则：在听众决定是否关注你的讲话之前，你只有七秒的时间可以利用。</li>
+<li>多说你，少说我：掌握好使用人称代词“我”和“你，你们”的比例。1:10</li>
+</ul>
+<p>因此要有一个干净利落的开头，不说你的名字，不介绍自己，不寒暄，开门见山直接切中要害。（如果需要介绍自己，在已经吸引听众注意力后进行）。常用方法：</p>
+<ol>
+<li><p>以“你（你们）”开头。</p>
+<p> 你们都是即将毕业的大学生，都怀着一个忐忑的心情，到底能不能找到一份逞心如意的工作…</p>
+</li>
+<li><p>运用强大的统计数据，或者我们所说的“性感数字”。</p>
+<p> 全世界有一半的人从来都没有打过电话，想象一下这对我们来说是多么大的机遇。</p>
+</li>
+<li><p>提出问题。</p>
+<p> “你们当中有多少人花了人生近一半的时间开会？”“有没有人知道1959年北极熊的数量是多少？现在的数量呢？”“你们当中有多少人认为你们孩子就读的学校应当做得更好？”</p>
+</li>
+<li><p>让听众感到震惊。</p>
+<p> 加利福尼亚州正面临着一次真正的、史无前例的危机。我们每个人将凭借良知以及选民的信任制订一项合理的计划，让加利福尼亚州拥有良好的财政基础，实实在在地平衡我们的预算，重塑加利福尼亚州过去的辉煌。</p>
+</li>
+<li><p>坦白。</p>
+<p> 要表现得脆弱一些。<br> 说实话我今天来演讲很忐忑，因为在这个领域，我研究得越多，越不敢讲…</p>
+</li>
+<li><p><strong>运用“想象”这个词</strong>。</p>
+<p> “想象一下这种情况。三年前，新的体育馆已经落成，我们的队员刚刚拿了他们的第一个篮球冠军……”“想象”这个词具有不可思议的力量，因为它让演讲变成了互动式的交流。在演讲过程中，听众从被动的一方转变成了积极的参与者，成了思想和愿景的共同创造者。</p>
+</li>
+<li><p>讲故事。</p>
+<p> 找出你数据里他人感兴趣的内容，将其作为重点利用对象。用人物将你的材料串起来，如“路易斯是我的一位客户。他打电话告诉我，如果我们在半个月内找不到解决问题的方案，他就要露宿街头了。”</p>
+</li>
+</ol>
+<h3 id="路线图：耐心引导，带听众了解演讲流程"><a href="#路线图：耐心引导，带听众了解演讲流程" class="headerlink" title="路线图：耐心引导，带听众了解演讲流程"></a>路线图：耐心引导，带听众了解演讲流程</h3><ul>
+<li>告诉人们你的演讲有多长</li>
+<li>让听众预览你的议程安排</li>
+<li>设定互动规则（何时提问，如何提问，是否有问答环节）</li>
+</ul>
+<h3 id="发现：循序渐进，刺激听众主动发现演讲要点"><a href="#发现：循序渐进，刺激听众主动发现演讲要点" class="headerlink" title="发现：循序渐进，刺激听众主动发现演讲要点"></a>发现：循序渐进，刺激听众主动发现演讲要点</h3><p>需要他们知道的三件事儿。三个发现要点。</p>
+<h3 id="总结：强化重点，加深印象"><a href="#总结：强化重点，加深印象" class="headerlink" title="总结：强化重点，加深印象"></a>总结：强化重点，加深印象</h3><p>完成发现部分的内容后，听众需要一个总结，重点是如何将相关部分融合在一起。</p>
+<p>清晰、明确、简短。先总结，后提出要求，或进入提问环节。</p>
+<h3 id="注意：切忌以提问环节结束"><a href="#注意：切忌以提问环节结束" class="headerlink" title="注意：切忌以提问环节结束"></a>注意：切忌以提问环节结束</h3><p>确保在问答环节之后，有个强大的结尾。避免在提问环节结束，或者再没有人提问的尴尬中结束。因为乱七八糟的提问冲淡了主题，听众很容易忘记、混淆你的主题是什么。</p>
+<h3 id="甜点：完美结尾，让听众记住你的演讲"><a href="#甜点：完美结尾，让听众记住你的演讲" class="headerlink" title="甜点：完美结尾，让听众记住你的演讲"></a>甜点：完美结尾，让听众记住你的演讲</h3><p>需要他们感受到的东西。与坡道相互应。</p>
+<p>重新控制演讲并确保以积极的语调完成演讲。</p>
+<p>瞄准情感。一则故事、轶事，一个比喻、想象。在某方面触动听众的情感，创造出一种感觉，把你和听众联系起来。</p>
+<p>能给听众带来情感共鸣的任何东西，也可以是增强你讲话要点的任何想象。</p>
+<h2 id="善用技巧"><a href="#善用技巧" class="headerlink" title="善用技巧"></a>善用技巧</h2><p>…</p>
+<h2 id="演讲风格"><a href="#演讲风格" class="headerlink" title="演讲风格"></a>演讲风格</h2><p>…</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://www.ximalaya.com/15874143/album/3118952?feed=reset" target="_blank" rel="external">一本真正教会你演讲的书 - 樊登读书会</a></li>
+<li><a href="http://www.jianshu.com/p/caa1bea5171e" target="_blank" rel="external">《高效演讲》书摘</a></li>
+<li><a href="http://feyy.github.io/2016/06/efficient-speech/">《高效演讲》- 精彩书摘</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;分享知识，推广项目，推销自己…演讲已经变得越来越重要，与我们的生活息息相关。那么如何进行高效演讲呢？&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="books" scheme="https://feyy.github.io/tags/books/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ES6 CHEAT SHEET</title>
+    <link href="https://feyy.github.io/2016/06/es6-cheat-sheet/"/>
+    <id>https://feyy.github.io/2016/06/es6-cheat-sheet/</id>
+    <published>2016-06-24T15:56:33.000Z</published>
+    <updated>2016-09-08T14:23:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>用一页展示所有ES6(es2015)新特性——持续更新中。</p>
+<h3 id="let"><a href="#let" class="headerlink" title="let"></a>let</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="keyword">let</span> a = <span class="number">10</span>;</div><div class="line">  <span class="keyword">let</span> a = <span class="number">10</span>; <span class="comment">// 报错【重复声明报错】</span></div><div class="line">&#125;</div><div class="line">a <span class="comment">// ReferenceError: a is not defined【块级作用域】</span></div></pre></td></tr></table></figure>
+<h3 id="const"><a href="#const" class="headerlink" title="const"></a>const</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> PI = <span class="number">3.1415</span>;</div><div class="line">PI = <span class="number">3</span>; </div><div class="line">PI <span class="comment">// 3.1415 不报错，赋值会默默失败【常量】</span></div><div class="line"><span class="keyword">const</span> PI = <span class="number">3.1</span>; <span class="comment">// TypeError: Identifier 'PI' has already been declared【重复声明报错】</span></div></pre></td></tr></table></figure>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://es6.ruanyifeng.com/" target="_blank" rel="external">《ECMAScript 6 入门》</a></li>
+<li><a href="http://www.ecma-international.org/ecma-262/6.0/" target="_blank" rel="external">《ECMAScript® 2015 Language Specification》</a></li>
+<li><a href="http://kangax.github.io/compat-table/es6/" target="_blank" rel="external">ECMAScript 6 compat table</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;用一页展示所有ES6(es2015)新特性——持续更新中。&lt;/p&gt;
+&lt;h3 id=&quot;let&quot;&gt;&lt;a href=&quot;#let&quot; class=&quot;headerlink&quot; title=&quot;let&quot;&gt;&lt;/a&gt;let&lt;/h3&gt;&lt;figure class=&quot;highlight javascr
+    
+    </summary>
+    
+    
+      <category term="es6" scheme="https://feyy.github.io/tags/es6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>高效演讲 -- 精彩书摘</title>
+    <link href="https://feyy.github.io/2016/06/efficient-speech/"/>
+    <id>https://feyy.github.io/2016/06/efficient-speech/</id>
+    <published>2016-06-23T15:56:33.000Z</published>
+    <updated>2016-09-08T14:23:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>无论从事什么工作，无论在学习还是工作中，你都可能会在会议室对同事、客户讲话，也可能会在大礼堂对着几百人演讲。这样的场合，你能否抓住机会，通过演讲一举赢得支持实现梦想？<br>　　<br>作者在咨询实践中，总结出了演讲中普遍适用的原则和方法，同时，科学解释了当众讲话紧张的原因，并揭示出演讲的真谛，即与听众分享。在分享精神下，紧张感会自然退去。同时，作者总结了许多行之有效的演讲方法和技巧，教你对演讲内容、风格和状态进行调整，这样，你就能通过自己的讲话吸引并打动听众，展现自己个人魅力的同时实现演讲沟通的目的。<br>　　<br>当今社会，演讲已成为每个人都无法逃避的课程。通过《高效演讲：斯坦福受欢迎的沟通课》，你将学到高效演讲领域前沿的研究成果。只要运用得当，你也可以高效演讲，抓住每个讲话的机会展现自我，让成功的可能性无限增大。<br><a id="more"></a></p>
+<h2 id="坡道：巧妙开场，一句话引起听众最大兴趣"><a href="#坡道：巧妙开场，一句话引起听众最大兴趣" class="headerlink" title="坡道：巧妙开场，一句话引起听众最大兴趣"></a>坡道：巧妙开场，一句话引起听众最大兴趣</h2><p>大多数演讲者在开口说话之前，就已经犯了第一个错误。这是一个很关键的问题，它可能会令你说的任何事情都变得毫无意义。这个错误就是：你认为所有的听众都在听你说话，但事实上他们没有。<br><br></p>
+<p>你不能认为，人们坐在椅子上就表示他们正关注着你。一种可能是：他们正想着周末去干点什么、晚饭吃点什么或在担忧当天办公室发生的事情。记住一点：在告诉听众听你讲话的理由之前，他们是不会在乎你说什么的，他们在乎的是自己的事情。你的开头要足够吸引人，他们才会停止看手机。在他们对你将要说的东西感兴趣之前，他们是不会抬头看你的。首先要考虑的是，你说的内容对他们有什么意义呢？<br><br></p>
+<p>设想每一位听众都背靠椅子，双腿交叉，双臂抱紧，这是什么情形？这表明你的发言开头没什么要点。直到听众身体前倾，坐在椅子边上，急切地想听到你将说些什么，这才表示你说的话吸引了他们。做到这一点的方法，就是构建我们说的“坡道”。<br><br></p>
+<p>坡道就是演讲时你一开始说出的那几个句子。它应当马上吸引听众的注意力，并有足够高的坡度，这样，无论接下来你说什么，都会引起听众的兴趣。这就像跳台滑雪，坡道会改变你冲击的角度，将你推送到一个更高的水平。在听众的脑海里，它会提升你讲话的重要性，将你说的内容放到一个更高的优先层次上。一旦你的听众开始关注你将要说的内容，那么他会一直倾听你后面的讲话。当他们倾听你讲话时，他们就与你真正在一起了。<br><br></p>
+<p>如何建立一条坡道？非常简单，返回并且重读本书准备部分里关联性一节的内容。为什么听众要在意你的讲话？这一问题的答案就是，你的演讲要有一个绝佳的开头。<br><br></p>
+<p>让我们重新审视一下前面例子中的关联性，看看它是如何发挥作用的。我们断定你公司里的高级管理人员对领导力培养项目很重视，因为：</p>
+<p>（1）如果他们不培养下一代领导人，整个公司的稳定性和可持续发展就会受到威胁；</p>
+<p>（2）他们对公司以及他们曾经创造的历史感到自豪，他们想为公司的发展竭尽全力；</p>
+<p>（3）因为董事会已经特别要求为培养下一代领导人制订一份综合计划，名单上的这些人声誉卓著，为董事会所信任。<br><br></p>
+<p>利用听众在乎的这三个理由，将它们像珍珠一样串起来成为一条项链。这样做确保你一开口，就向听众证明了你很在乎他们的需要。因此，你可以组织这样的一个开头，或者说构建这样的一个坡道，如：</p>
+<p>———————————————————————————————</p>
+<p>在座的每一位都为公司的成功作出了巨大的贡献。你们当中的许多人都是公司的创立者。你们一起创建了这家公司，在你们的努力下，公司成为行业里的佼佼者。但是，女士们、先生们，我们现在面临一个挑战：在接下来的七年中，你们中有35%的人会退休，而我们还没有储备好领导人，以便在未来带领我们前进。<br><br></p>
+<p>这就好像我们的一次航行，在出发时有充足的补给让我们到达目的地，但是却没有充足的补给让我们回家。如果我们现在不采取行动，那么公司的未来就成败难料了。<br><br></p>
+<p>在接下来的45分钟里，我将向大家介绍我们做的一些研究，这些研究将会告诉大家缺口在哪里，我们需要做些什么，以及这个项目需要的花费。在本次演讲结束时，我希望各位能表决同意资助这一意义深远的项目。</p>
+<p>———————————————————————————————</p>
+<p>从上面的例子中，你可以看出，关联性是如何引出第一章结尾列出的沟通大纲中的坡道的。</p>
+<p>将上例的开头与下面的开头作对比，后者更为常见。当你读这个例子的时候，注意自己的心理反应。</p>
+<p>———————————————————————————————</p>
+<p>各位，早上好！很高兴今天能在这里演讲。感谢你们在百忙之中抽出时间来听我的演讲。在开始我的演讲之前，我要特别感谢马克·孔蒂先生，是他组织了今天的演讲活动。在进入正题之前我先介绍点琐事：卫生间在大厅的左边。我已经吩咐莱因将有关计划的详细材料分发给各位。她马上就会把资料发给大家。<br><br></p>
+<p>我对领导力非常感兴趣，并准备了66张幻灯片，列出了我的团队以及我个人制订、实施此计划的过程，我认为我们制订的计划和步骤可以创造出非常棒的领导力培养项目。在接下来的45分钟里，我将展示这些幻灯片，你们可以随时打断我，提任何问题，我将很乐意作答。</p>
+<p>———————————————————————————————</p>
+<p>注意到什么问题了吗？在这个开头中最常用的一个词是什么？是“我”。听众关心的是谁呢，他们自己。这样的开头关注的是演讲者自己，而不是听众。我们是如何知道这一点的呢？因为在这段演讲中，“我”这个字出现了十二次，而“你（或你们）”这个词仅出现了两次。<br><br></p>
+<p>还有没有其他问题呢？演讲者把宝贵的时间浪费在了无关紧要的琐事介绍上，在关键的前几秒就处于不利地位了。听众的注意力会从演讲者身上转移到分发资料的人身上。让人们随时打断演讲会削弱你的权威性，会让听众感觉你说的内容都不怎么重要，就算他们走神都没关系。而真正的大事或挑战，也是你如此紧迫地发表这场演讲的原因，却丝毫没有被提及。而且，演讲者在开头就告诉我们这次演讲用时很长，让人厌烦。不久，听众就会低下头摆弄手机。<br><br></p>
+<p>你需要将注意力从自己身上转移到听众身上。历史上最成功的演讲者之一，亚伯拉罕·林肯曾经说过：“当我准备与一个人辩论时，我会花三分之一的时间考虑我自己和打算说的话，花三分之二的时间思考对手以及他将要说的内容。”<br><br></p>
+<p>一个简单的、能确保你将关注点放在别人身上的技巧就是：掌握好使用人称代词“我”与“你（你们）”的恰当比例——这是帕特里夏·弗里普发明的一种方法。在你的讲话中，用了多少次“我”，用了多少次“你（你们）”呢？<br><br></p>
+<p>专家提示：掌握好“我”与“你（你们）”的比例。讲话中用一次“我”就要用十次“你（你们）”。<br><br></p>
+<p>大多数人的讲话却是另一种情形。大部分人开口说的第一个字是“我”。这几乎是任何句子开头的第一个字，其使用频率仅排在“那个（that）”一词之后。人们使用“我”的频率是使用“你（你们）”的频率的十倍。不相信吗？你可以打开电子信箱，看看曾收到的信件以及已发送的信件就知道结果了。除非你是一位电影明星或正在讲一个非常动人的有关自己的故事（讲故事的技巧详见下一节），否则要慎用“我”这个人称代词。再次强调一下，听众在乎的是谁呢？他们自己。开口说话时用“你（你们）”，这样就有了一个良好的开端，因为你谈论的正是听众喜爱的主题。<br><br></p>
+<p>设计你的开头时，切记要让它出众、干净、利落，要旗开得胜，因为没有时间让你浪费。你每天都在有意无意地作决策，决定对不同的事情投入多大的关注——你的听众也是如此。要吸引他们的注意，就得遵守演讲的这个原则。当你站在一群人面前发表演讲时，你想过听众在作出是否听你演讲的决定之前会在你身上花多长时间吗？一分钟还是两分钟？已有的研究告诉我们，你能利用的时间只有七秒。<br><br></p>
+<p>专家提示：七秒法则：在听众决定是否关注你的讲话之前，你只有七秒的时间可以利用。<br><br></p>
+<p>这情形很不妙：大多数情况下，在你开口说第二句话之前，七秒已经过去了。往讲台上走就用了一半的时间。如果在七秒的时间里，你只能说一句话，那么千万不要说“早上好”或“谢谢某人的光临”这样的话来浪费你的时间。明智的做法应该是，马上向听众证明你将带给他们的价值。说一些有意义的、有价值的话，向听众展示：</p>
+<p>（1）你理解他们的处境；</p>
+<p>（2）你到这里来是要帮助他们。<br><br></p>
+<p>如果你确实需要唠些家常、介绍自己或这次演讲的议程安排，那么把这些事放在开场之后再说。议程安排不是开场白，“早上好，感谢大家的光临”不是开场白，告诉人们你能发表演讲有多么高兴也不是好的开头，这些都是可有可无的闲话。当人们听到这些话时，他们马上就收到了一个信号——接下来要讲的东西没什么重要性可言。<br><br></p>
+<p>大多数演讲者在最初的五到十分钟之后才兴奋起来，才进入良好的状态。问题是他们变得兴奋需要占用听众的时间。在五到十分钟之后，你到达最佳状态了，可你的听众却早开溜了。他们可能依然坐在那里，但是并没有听你说话。你已经失去了他们，把他们拉回来要么已经太晚了，要么你得付出双倍的努力才能再次引起他们的兴趣。<br><br></p>
+<p>因此，要有一个“干净利落的开头”。不说你的名字，不介绍自己，不寒暄，开门见山直接切中要害。<br><br></p>
+<p>请再次欣赏下面的开场例子：</p>
+<p>———————————————————————————————</p>
+<p>在座的每一位都为公司的成功作出了巨大的贡献。你们当中的许多人是公司的创建者。你们一起创建了这家公司，并且在你们的努力下，公司已成为行业里的佼佼者。但是，女士们、先生们，我们现在面临一个挑战。在接下来的七年里，你们中有35%的人会退休，而我们还没有储备好领导人，在未来带领我们前进。<br><br></p>
+<p>这就好像一次航行，出发时有充足的补给让我们到达目的地，但是却没有充足的补给让我们回家。如果我们现在不采取行动，那么公司的未来就成败难料了。</p>
+<p>———————————————————————————————</p>
+<p>注意：上例的演讲中，没有“早上好”“感谢各位光临”这样的话。不要因为礼貌而进行毫无意义的寒暄，不要浪费听众的时间以示对他们的尊重，要尽可能快地吸引听众的注意力。<br><br></p>
+<p>如果需要介绍自己，可以在你已经吸引了听众的注意力之后进行。</p>
+<p>———————————————————————————————</p>
+<p>我是本公司人力资源部部长吉恩·格瑞恩，在接下来的45分钟里，我将向大家介绍我们做的一些研究，这些研究将会告诉大家缺口在哪里，我们需要做些什么，以及这个项目需要的花费。在本次演讲结束时，我希望各位能表决同意资助这一意义深远的项目。</p>
+<p>———————————————————————————————</p>
+<p>看在上帝的份上，千万不要浪费最初那宝贵的七秒告诉大家厕所的位置。传统的建议总是认为演讲应该以笑话开头，我们认为开头要慎讲笑话，除非：</p>
+<p>（1）你认为自己是幽默风趣的——事实上也确实如此；</p>
+<p>（2）笑话有新颖的形式和内容；</p>
+<p>（3）最重要的是，与你演讲的主题相关。<br><br></p>
+<p>专家提示：开头慎讲笑话。<br><br></p>
+<p>如果你一上场就讲了一个不好笑的笑话，那么还不如收拾收拾，直接打道回府得了。因为接下来，你将不得不花半个小时挽救自己的信誉，更糟糕的是，听众此时对你还很失望。如果你讲的笑话不是新的或者不是原创的，听众半个月前就听过了，那么他们就会自然地认为你接下来讲的内容也不过是老生常谈而已。如果笑话与你的主题无关，特别是在正式场合下，它会向听众释放这样的信号：接下来你讲的内容也与主题没什么关系。<br><br></p>
+<p>有时候人们会说：“我想把最好的东西留到最后。”但事实是，如果你没有把最精彩的内容放到前面并以此打动听众，那么听众无论如何也不会坚持到最后。在新闻界，我们将开头称为“引子”。“不要埋葬引子”，这是新闻学校传承的理念。记者们都明白：很少有读者会完整地将报纸上的故事从头至尾都看完。因此，开头就要抛出最精彩的内容。<br><br></p>
+<p>专家提示：不要埋葬引子。倘若你没有在开头就运用好它们，那么它们就再也派不上用场了。机不可失，时不再来。<br><br></p>
+<p>为架构你的坡道，下面简单列出了一些有用的开场策略：</p>
+<ol>
+<li><p>以“你（你们）”开头。这样做会给你带来直接的好处，这说明你谈论的是听众喜爱的话题——关于他们自己的。直接而明确地表现出你理解和在乎他们的处境及感受。</p>
+</li>
+<li><p>运用强大的统计数据，或者我们所说的“性感数字”。性感数字包含能给听众带来惊喜的元素，它们会让听众精神振奋并关注你说的内容。如果你任职于电信行业，你可以这样开头：“全世界有一半的人从来都没有打过电话，想象一下这对我们来说是多么大的机遇。”有关性感数字的更多例子如：大约20%的美国人从来没有发过电子邮件；到2012年智能手机的市场成交额预计会达到40亿美元——与四年前相比翻了两番；仅有4%的阿拉伯妇女使用互联网；十年之内，中国和南非的旧电脑所产生的电子垃圾会达到2007年的四倍，印度会达到五倍。</p>
+</li>
+<li><p>提出问题。“你们当中有多少人花了人生近一半的时间开会？”“有没有人知道1959年北极熊的数量是多少？现在的数量呢？”“你们当中有多少人认为你们孩子就读的学校应当做得更好？”</p>
+</li>
+<li><p>让听众感到震惊。加利福尼亚州州长杰瑞·布朗在2011年1月31日的演讲中就采用了这样的方法，他说：“加利福尼亚州正面临着一次真正的、史无前例的危机。我们每个人将凭借良知以及选民的信任制订一项合理的计划，让加利福尼亚州拥有良好的财政基础，实实在在地平衡我们的预算，重塑加利福尼亚州过去的辉煌。”</p>
+</li>
+<li><p>坦白。要表现得脆弱一些。“我一直害怕蜘蛛。一天，在会议室里，总裁让我收拾他在角落里看到的一只蜘蛛。天哪……”</p>
+</li>
+<li><p>运用“想象”这个词。“想象一下这种情况。三年前，新的体育馆已经落成，我们的队员刚刚拿了他们的第一个篮球冠军……”“想象”这个词具有不可思议的力量，因为它让演讲变成了互动式的交流。在演讲过程中，听众从被动的一方转变成了积极的参与者，成了思想和愿景的共同创造者。</p>
+</li>
+<li><p>讲述历史逸事。“德怀特·D. 艾森豪威尔将军的军队被包围了，他派一名军士出去侦察。军士返回后，艾森豪威尔将军问：‘简单告诉我目前的形势。’那位军士回答道：‘想象一个面包圈，我们就是上面的那个洞。’我们目前的形势就是这样……”</p>
+</li>
+<li><p>讲故事。找出你数据里他人感兴趣的内容，将其作为重点利用对象。用人物将你的材料串起来，如“路易斯是我的一位客户。他打电话告诉我，如果我们在半个月内找不到解决问题的方案，他就要露宿街头了。”</p>
+</li>
+</ol>
+<p>有关坡道的更多例子，请见附录2。</p>
+<h2 id="路线图：耐心引导，带听众了解演讲流程"><a href="#路线图：耐心引导，带听众了解演讲流程" class="headerlink" title="路线图：耐心引导，带听众了解演讲流程"></a>路线图：耐心引导，带听众了解演讲流程</h2><p>一旦你构建坡道并吸引了听众的注意，你就可以在开头部分添加第二种元素了，我们称这种元素为“路线图”。想象一下，你正驾车行驶在旅途中，为了让你的乘客高兴，你需要告诉他们目的地在哪里，你们将走哪条路线，以及到达目的地会需要多长时间。同样地，你的讲话路线图也应当说明三件事情：<br><br></p>
+<p>告诉人们你的演讲有多长。人们需要知道他们得听多长时间，因此，告诉人们这一点。“我将会用15分钟的时间做介绍。然后，我们用15分钟时间进行自由讨论，在此期间，我可以回答你们提出的任何问题。三点钟，我们的会议结束。”这可真是一种解脱！<br><br></p>
+<p>让听众预览你的议程安排（要向听众保证你有一个议程安排）！“根据我们目前的领导力水平，我们将研究领导力的发展。从现在开始五年之内我们需要提高到何种水平，以及为了实现我们的目标需要做哪些事情。”<br><br></p>
+<p>设定互动规则。人们都想参与进来。在演讲的过程中你想让他们提问吗？还是希望他们在问答环节再进行提问？如果你什么也不说，那么，可能会发生两种情况：（1）你什么问题也得不到；（2）你的讲话被打断。讲话的人是你，因此，你要掌控整个形势。即使你说“我利用15分钟的时间进行介绍，然后，会给大家15分钟时间进行提问。因此，“如果有问题，请等到提问环节”或“这是一次公开的讨论，请你随时提问”也不能保证人们不会打断你，但这确实有利于你更好地掌控整个演讲进程。<br><br></p>
+<p>演讲者通常在提出路线图时会犯两个错误：</p>
+<p>（1）完全没有路线图；</p>
+<p>（2）完全吓着了听众。<br><br></p>
+<p>考虑下面的路线图，注意一下你的反应：“今天，我将谈谈七个新兴领域的产品开发问题。我将介绍如何将新产品纳入我们的战略重点，如何对新产品进行营销，如何制订销售战略。我们还要研究它对公司结构造成的影响。我还要向大家介绍四位新的团队成员，最后，我要跟大家谈谈我们新的人力资源团队制订的新的领导班子计划。好，现在就开始吧。”<br><br></p>
+<p>难道这样的路线图没有让你的心沉下去吗？我们已经筋疲力尽了！这位发言人用传送带向我们传递信息，我们却坚持不下去了。路线图要简洁——不要超过三项。哪三项呢？你的路线图里包含的三项内容将会是三个发现要点。要想知道它们是什么，请继续阅读、学习我们称为“发现”一节的内容。</p>
+<h2 id="发现：循序渐进，刺激听众主动发现演讲要点"><a href="#发现：循序渐进，刺激听众主动发现演讲要点" class="headerlink" title="发现：循序渐进，刺激听众主动发现演讲要点"></a>发现：循序渐进，刺激听众主动发现演讲要点</h2><p>你已经用坡道捕获了听众的注意力，并且用路线图告诉了他们目的地。你已经完成了开头部分，现在应该进入演讲的主体部分了。正如我们前面说过的一样，演讲的中间部分要提供知识。这样的知识可能是你将要提供的新信息，也可能是他们已经知道但需要强化的知识，但无论如何不能只是你碰巧下载下来放在幻灯片上的陈旧数据，也不能只是你想说的任何事情。它是为了达到你想要的结果，听众需要知道或发现的知识。<br><br></p>
+<p>我们称之为发现部分，为什么是“发现”呢？因为从理论上来讲，你将要说出自己的见解从而刺激听众发现些什么，而不是强制性地将信息灌输到他们的大脑里。发现可能很简单，如一些人终于弄明白了一个一直令他们困惑的问题。它是脑部的一种兴奋活动——人们喜欢那种自己想清楚某些事情的感觉。“啊哈，原来如此。”他们会享受这样的感觉。<br><br></p>
+<p>我们将发现部分浓缩为发现的三个要点，简写为PoDs。我们要求你严格将中间部分的讲话归纳为三个要点，即使你确定至少有17个要点需要阐述也得如此。<br><br></p>
+<p>为什么是三个呢？三是个广泛使用的数字。三角形是世界上最稳定的结构。坦率地说，人们想要处理的事情大约是三类，容易学习、容易记住的事情也是三类。已有的研究发现大脑并不是像录像机那样不间断地记录数据，相反，它会将信息进行有意义的分类、切割。将你的数据切割为三类，这意味着你已经对所提供的信息进行了整理，用听众的大脑想要加工的方式进行了整理。无论你要说什么，也无论你说的内容有多复杂，创造一个三要点的结构。人们在短短15分钟的谈话里，不可能跟得上7或12个要点的演讲结构。向听众以及你自己说明三要点，听众和你都能清晰地知道演讲内容。<br><br></p>
+<p>想一想，如果你听到下面的话，你的心得有多沉，“我打算谈谈我们公司自创立以来的十六次大的进展……”请再来些咖啡提提神吧！现在想象一下演讲者这么说的感觉：“我将谈谈本公司的三个领导时代：我们的过去、现在以及未来”。看到了吗？简单、容易，带来一种解脱感。你知道你的目的地在哪里，并且听起来不吓人。领导人没有将内容简化，却将复杂的事情说得清楚明了。<br><br></p>
+<p>富兰克林·德拉诺·罗斯福为我们提供了一个经典的例子：1933年3月12日，星期天，他进行了第一次新闻广播演讲，史称“炉边谈话”。当时正处于大萧条时期，全国民众处于焦急之中，他是这样说的：</p>
+<p>———————————————————————————————</p>
+<p>朋友们，我想花几分钟时间同美国人民谈谈银行的情况。只有很少一部分人了解银行的运行机制，而绝大多数人把银行当做存款和取款的地方。我要告诉大家，过去这些天我们都做了些什么，为什么要做这些事情，以及我们下一步的计划。</p>
+<p>———————————————————————————————</p>
+<p>注意他的路线图：</p>
+<p>（1）过去这些天我们都做了些什么；</p>
+<p>（2）为什么要做这些事情；</p>
+<p>（3）我们下一步的计划是什么。<br><br></p>
+<p>将发现三要点当作寻找思想的摇篮。你所有的内容，包括数据、信息、故事、逸事、统计、引言、图标等，都可以分类放进这三个篮子里。这样的三个发现要点为你的演讲内容提供了一种结构体系。<br><br></p>
+<p>例如，如果你打算向一组销售人员推出一套新的体系，那么他们可能需要知道：</p>
+<p>（1）体系如何运行；</p>
+<p>（2）这套体系在哪些方面可以帮助他们；</p>
+<p>（3）为了运行这套体系，他们需要做些什么？<br><br></p>
+<p>如果你跟一个处于青春叛逆期的孩子谈论喝酒和开车的事情，他可能需要知道：</p>
+<p>（1）醉酒驾车有什么危险；</p>
+<p>（2）你对他的期望是什么；</p>
+<p>（3）你允许其开车的承诺。<br><br></p>
+<p>专家提示：无论你需要讨论多少事情，将内容进行分类，类别不要超过三种，或者说发现要点不要超过三个。<br><br></p>
+<p>你怎么才能知道用三个发现要点中的哪一个呢？好的一点是，为找出它们你已经做了必要的工作。回想一下准备过程，为了得到你想要的结果，听众需要知道哪三件事情？对了，你认定的那三件事情就是三个发现要点。简单吧！翻开本书的44页，看看三个“需要知道”的事项是如何与三个发现要点联系起来的。<br><br></p>
+<p>返回去并且将你的三个发现要点插入到路线图里。例如，在接下来的15分钟，我们将要谈论新的体系。我将向你介绍该体系如何运行，在哪些方面会给你带来帮助，以及为了运用该体系你们需要做些什么。<br><br></p>
+<p>现在你已经分好三类了，接下来你就可以设计演讲的中间部分了。你可以运用故事、比喻、生动的语言和统计材料等来充实你的每一个发现要点。有关这些技巧的详细知识，请看本书技巧部分的内容。</p>
+<h2 id="总结：强化重点，加深印象"><a href="#总结：强化重点，加深印象" class="headerlink" title="总结：强化重点，加深印象"></a>总结：强化重点，加深印象</h2><p>如果你的讲话已经超过了五分钟，在你完成发现部分的内容之后，听众需要一个总结。他需要你提醒一下，使他记得你前面讲的大致内容。简单作一个总结，重点是如何将相关部分融合在一起。最好是在问答环节之前作总结（下面会详细探讨），因为总结会提醒人们想到他们想要提问的内容，这样会促进交谈。总结应当是清晰、明确、简短的，但不能草草了事。如果你的演讲中有要求，那么先作总结然后提出要求。这是提出要求的好时机，因为如果你已经有效地完成了你的工作，那么，你就已经将听众带到一个最佳状态了。<br><br></p>
+<p>下面是有关总结的一个例子：</p>
+<p>———————————————————————————————</p>
+<p>今天，我们已经讨论了是否应当向我们学校的艺术表演投入更多资金的问题。（这是你的要点）我们已经明白了潜在的利益、也清楚了可能的投资成本，也解释了我们的五年规划，即要将综合性的艺术表演带到这个区里。（这些是你的三个发现要点。）女士们、先生们，你们将要作出一个重要的决定。在你们投票之前，如果有什么问题请提出来，我会认真予以回答。</p>
+<p>———————————————————————————————</p>
+<h2 id="注意：切忌以问答环节结束"><a href="#注意：切忌以问答环节结束" class="headerlink" title="注意：切忌以问答环节结束"></a>注意：切忌以问答环节结束</h2><p>大多数正式的演讲都包含问答环节，我们认为这是一个好的做法，因为听众总是想与你进行交流、对话的。<br><br></p>
+<p>然而，大多数人都将提问环节安排错了，他们将这一环节放到了演讲的最后，这真是个糟糕的做法！我们认为，永远都不要以问答环节作为演讲的结尾，否则就太冒险了。原因在于：<br><br></p>
+<p>你费尽心力好不容易在演讲结束时将听众带到了一个最佳的状态，你做得很不错。你得意扬扬地结束了讲话，然后说：“我们还剩下15分钟，有什么问题要问吗？”底下一片沉寂。“有人提问吗，一个问题都没有吗？”仍然没有人说话。你环顾四周，越来越感到失望：“确定没有问题吗？”底下的每个人都局促不安，都不敢看你的眼睛。“那么，好吧，”你喃喃自语道，“我想我该结束演讲了。嗯，谢谢大家来捧场……”你看起来无比愚蠢，收拾完笔记本电脑之后，马上溜之大吉，最后的这一环节完全破坏了之前良好的效果。<br><br></p>
+<p>还有更糟糕的：你的演讲很顺利。而到了问答环节，你碰到了咄咄逼人的提问者。你记得那个人吗？他身着条纹西装，衣冠楚楚，留着山羊胡，手里拿着一支红笔。他坐在底下听完了你的整个演讲，耐心地等待提问时间的到来。事实上，他并没有问题要问，在他心里只有一个自己的安排，那就是在大庭广众之下向听众证明他比你聪明，因为他发现了你讲话中的漏洞。他可能会问你这样的问题：“你从哪里得到的数据？你说我们第三季度增长了12.6%，但是碰巧我知道仅仅增长了11.9%。”无论你多么巧妙地回答这个问题，你的信誉都会受到影响。（有关如何像公共关系部门那样处理问答环节，请阅读第三章有关技巧的内容。）听众目睹了发生的一切。你为了从情感上打动听众所做的一切努力都付诸东流。如果你已经带着听众踏上了一次情感之旅，此刻，你又快速地跌落了下去。<br><br></p>
+<p>尽管有以上风险，我们仍然建议，演讲时尽可能地包含问答环节，它是与听众建立联系、建立互信的好方法。但是，你必须确保在问答环节之后有一个强大的结尾，结尾往往会产生令人意想不到的结果。人们会记得他们最后时刻听过的内容和体验过的感觉。一部电影的结尾应当是非常完满的，一本书的最后一章也必须是最好的。在一次沟通或演讲中，最后的三分钟必须将所有的内容连接在一起，将你的听众带到最佳状态。你邀请人们去自己家，用诱人的沙拉、精致的鲜汤招待他们，你会在用过烤牛肉之后就将他们扫地出门吗？当然不会！你会端上一些焦糖布丁或巧克力蛋糕让他们享用，以此圆满地结束晚宴。你的演讲也应当如此。问答环节结束后，你要以一个圆满的结尾来赢得听众的赞赏，我们将其称之为甜点。</p>
+<h2 id="甜点：完美收尾，让听众记住你的演讲"><a href="#甜点：完美收尾，让听众记住你的演讲" class="headerlink" title="甜点：完美收尾，让听众记住你的演讲"></a>甜点：完美收尾，让听众记住你的演讲</h2><p>甜点是你重新控制演讲并确保以积极的语调完成演讲的部分。无论你在问答环节中遭受了多么重大的损失，甜点是确保你赢得最终胜利的锦囊妙计。<br><br></p>
+<p>记得我们之前说过，演讲的每一部分都要各司其职吗？是的，结尾，或者说甜点的工作就是要引起听众的情感共鸣，创造一种感觉。结尾不是向听众传递任何新信息，也不是告诉他们需要知道另外一些事情的部分。听众的大脑此时已停止工作，已经等待上车离开了。这个时候不能强迫他们打开包裹，让你往里头再塞一些数据。你已经将所有的事实都告诉他们了，这个时候应当瞄准情感了。<br><br></p>
+<p>强烈的情感会让你说话更具“黏性”，或者说更让人难忘。如果你的甜点非常好，听众将会永远记住它，即使他们已经忘记了你的数据，也忘不了你曾给他们的甜点。最好的甜点就是一则故事、逸事、一个比喻或想象。它应当在某些方面触动听众的情感，这样就会创造出一种感觉，会把听众和你联系起来。<br><br></p>
+<p>你可以这样介绍你的甜点：“在结束之前，我希望大家会有这样的想法……”然后，告诉大家这个想法是什么。它可能是你实际思想的体现。你可以讲处于类似背景下的其他人的故事，也可以回顾过去，举一个有关成功的产品的例子或你曾经倡议并成功实施的例子，也可以为听众描绘一幅未来图景：“想象一下……”<br><br></p>
+<p>甜点种类繁多，它可以是能给听众带来强烈情感共鸣的任何东西，也可以是能增强你讲话要点的任何想象。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://item.jd.com/11206819.html" target="_blank" rel="external">《高效演讲》</a></li>
+<li><a href="http://yuedu.163.com/book_reader/d9f7b30b3c0940f99708954b1ced488a_4" target="_blank" rel="external">《高效演讲》- 精彩书摘</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;无论从事什么工作，无论在学习还是工作中，你都可能会在会议室对同事、客户讲话，也可能会在大礼堂对着几百人演讲。这样的场合，你能否抓住机会，通过演讲一举赢得支持实现梦想？&lt;br&gt;　　&lt;br&gt;作者在咨询实践中，总结出了演讲中普遍适用的原则和方法，同时，科学解释了当众讲话紧张的原因，并揭示出演讲的真谛，即与听众分享。在分享精神下，紧张感会自然退去。同时，作者总结了许多行之有效的演讲方法和技巧，教你对演讲内容、风格和状态进行调整，这样，你就能通过自己的讲话吸引并打动听众，展现自己个人魅力的同时实现演讲沟通的目的。&lt;br&gt;　　&lt;br&gt;当今社会，演讲已成为每个人都无法逃避的课程。通过《高效演讲：斯坦福受欢迎的沟通课》，你将学到高效演讲领域前沿的研究成果。只要运用得当，你也可以高效演讲，抓住每个讲话的机会展现自我，让成功的可能性无限增大。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="books" scheme="https://feyy.github.io/tags/books/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>environment variable</title>
+    <link href="https://feyy.github.io/2016/02/environment-variable/"/>
+    <id>https://feyy.github.io/2016/02/environment-variable/</id>
+    <published>2016-02-16T15:56:33.000Z</published>
+    <updated>2016-09-08T14:23:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>windows的环境变量的设置都应该很熟悉了，这儿不记录了，不知道的自己gg去。</p>
+<p>换成mac后一直不太清除环境变量设置的方法和原理，此处稍作抄袭记录了。</p>
+<h2 id="SHELL"><a href="#SHELL" class="headerlink" title="SHELL"></a>SHELL</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">echo</span> <span class="variable">$SHELL</span></div></pre></td></tr></table></figure>
+<p>使用上面的命令可以知道使用的shell类型。<br>如果输出的是：csh或者是tcsh，那么你用的就是C Shell。<br>如果输出的是：bash，sh，zsh，那么你的用的可能就是Bourne Shell的一个变种。<br>Mac OS X 10.2之前默认的是C Shell。<br>Mac OS X 10.3之后默认的是Bourne Shell。  </p>
+<p>如果是Bourne Shell，我是这个…<br>那么你可以把你要添加的环境变量添加到你主目录下面的.profile或者.  bash_profile，如果存在没有关系添加进去即可，如果没有生成一个。  </p>
+<h2 id="如何配置"><a href="#如何配置" class="headerlink" title="如何配置"></a>如何配置</h2><p>Mac配置环境变量的地方<br>1./etc/profile   （建议不修改这个文件 ）<br>全局（公有）配置，不管是哪个用户，登录时都会读取该文件。</p>
+<p>2./etc/bashrc    （一般在这个文件中添加系统级环境变量）<br>全局（公有）配置，bash shell执行时，不管是何种方式，都会读取此文件。</p>
+<p>3.~/.bash_profile  （一般在这个文件中添加用户级环境变量）<br>每个用户都可使用该文件输入专用于自己使用的shell信息,当用户登录时,该文件仅仅执行一次!</p>
+<p>4.~/.bashrc<br>文件会在bash shell调用另一个bash shell时读取，也就是在shell中再键入bash命令启动一个新shell时就会去读该文件。这样可有效分离登录和子shell所需的环境<br>。但一般 来说都会在.bash_profile里调用.bashrc脚本以便统一配置用户环境。然而我用的mac并没有…</p>
+<p>linux下环境变量用冒号隔开，所以配置的方式为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> PATH=&lt;your path&gt;:<span class="variable">$PATH</span></div></pre></td></tr></table></figure>
+<h2 id="赠送"><a href="#赠送" class="headerlink" title="赠送"></a>赠送</h2><ul>
+<li>~/.bash_logout在退出shell时被读取。所以我们可把一些清理工作的命令放到这文件中。</li>
+<li>修改host: <code>sudo vi /etc/hosts</code></li>
+<li>查看系统变量用 <code>$echo</code></li>
+</ul>
+<h2 id="YY"><a href="#YY" class="headerlink" title="YY"></a>YY</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">vim /etc/profile</div><div class="line"><span class="comment"># 文档末尾追加</span></div><div class="line"><span class="built_in">export</span> PATH=<span class="string">"&lt;your path&gt;:<span class="variable">$PATH</span>"</span></div><div class="line"><span class="comment"># 想立即生效</span></div><div class="line"><span class="built_in">source</span> /etc/profile</div></pre></td></tr></table></figure>
+<p>其他常用变量通常修改~/.bash_profile</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://elf8848.iteye.com/blog/1582137" target="_blank" rel="external">Mac 可设置环境变量的位置、查看和添加PATH环境变量</a></li>
+<li><a href="http://blog.163.com/wang_hai_fei/blog/static/309020312008728333912" target="_blank" rel="external">.bash_profile和.bashrc的区别(如何设置生效)</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;windows的环境变量的设置都应该很熟悉了，这儿不记录了，不知道的自己gg去。&lt;/p&gt;
+&lt;p&gt;换成mac后一直不太清除环境变量设置的方法和原理，此处稍作抄袭记录了。&lt;/p&gt;
+&lt;h2 id=&quot;SHELL&quot;&gt;&lt;a href=&quot;#SHELL&quot; class=&quot;headerlink
+    
+    </summary>
+    
+    
+      <category term="bash" scheme="https://feyy.github.io/tags/bash/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>pm2 senior (一)</title>
+    <link href="https://feyy.github.io/2016/01/pm2-senior-1/"/>
+    <id>https://feyy.github.io/2016/01/pm2-senior-1/</id>
+    <published>2016-01-25T13:53:18.000Z</published>
+    <updated>2016-09-08T14:23:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>搞了一周线上环境…慢慢要变成OP了…<br>pm2还是很好很强大的，用到的就慢慢写下来吧，当笔记了，等有空了专门研究下…像个奢望…像我这么懒的人…</p>
+<h2 id="内存阀值"><a href="#内存阀值" class="headerlink" title="内存阀值"></a>内存阀值</h2><p>给pm2设置一个内存阀值，若占用内存达到阀值，pm2将自动重启该服务。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pm2 start app.js --max-memory-restart 20M  <span class="comment"># 50K | 50M 1G</span></div></pre></td></tr></table></figure>
+<p>值得注意的是，这只是一种容错机制，而不能当做功能用。当你真的发现线上服务有重启现象时，就应该去挖挖自己程序的bug了。所以每次重启应该关注一下服务的重启次数额。<br>要生效需delete掉先前的server再start，直接restart不会生效额。</p>
+<h2 id="传递Node启动参数"><a href="#传递Node启动参数" class="headerlink" title="传递Node启动参数"></a>传递Node启动参数</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pm2 start app.js --node-args=<span class="string">"--harmony"</span></div></pre></td></tr></table></figure>
+<h2 id="日志分文件"><a href="#日志分文件" class="headerlink" title="日志分文件"></a>日志分文件</h2><p>官方推荐插件<a href="https://github.com/pm2-hive/pm2-logrotate" target="_blank" rel="external">pm2-logrotate</a>，虽然star少，但它是一个独立的服务，不影响pm2运行，可以放心使用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">pm2 install pm2-logrotate</div><div class="line">pm2 <span class="built_in">set</span> pm2-logrotate:interval 1            <span class="comment"># 默认为1，可以不设置</span></div><div class="line">pm2 <span class="built_in">set</span> pm2-logrotate:interval_unit <span class="string">'DD'</span>    <span class="comment"># 设置分文件的时间单位(默认天)，DD：天；MM：月；mm：分</span></div><div class="line">pm2 <span class="built_in">set</span> pm2-logrotate:max_size 100M           <span class="comment"># 设置分文件的大小单位(默认10MB)，接受G,M,K</span></div><div class="line">pm2 <span class="built_in">set</span> pm2-logrotate:retain all            <span class="comment"># 设置保存的日志数，超过将自动删除，接受 all | number</span></div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;搞了一周线上环境…慢慢要变成OP了…&lt;br&gt;pm2还是很好很强大的，用到的就慢慢写下来吧，当笔记了，等有空了专门研究下…像个奢望…像我这么懒的人…&lt;/p&gt;
+&lt;h2 id=&quot;内存阀值&quot;&gt;&lt;a href=&quot;#内存阀值&quot; class=&quot;headerlink&quot; title=&quot;内存阀
+    
+    </summary>
+    
+    
+      <category term="pm2" scheme="https://feyy.github.io/tags/pm2/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Commit message 和 Change log</title>
+    <link href="https://feyy.github.io/2016/01/commit-message/"/>
+    <id>https://feyy.github.io/2016/01/commit-message/</id>
+    <published>2016-01-22T19:23:08.000Z</published>
+    <updated>2016-09-08T14:23:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>此处不得不赞叹一下阮老师的文笔和高产，膜拜中…🚬<br>浏览过不少开源项目了，也算是github的深水用户，但还真没有太注意人家的提交注释(commit message)有什么不一样，以及每次发版时长长的chang logs。感谢小伟哥的指导，技术视野上的差距还是蛮大的，刚把得💪</p>
+<p>先来张<a href="https://github.com/angular-ui/bootstrap" target="_blank" rel="external">angular-ui-bootstrap</a>库的commit截图<br><img src="http://i.niupic.com/images/2016/01/23/TF2n76.png" alt="ui-bootstrap commit message"></p>
+<p>不管多少人提交代码，总是那么清晰爽快。<br><a id="more"></a></p>
+<h2 id="commit-message-格式"><a href="#commit-message-格式" class="headerlink" title="commit message 格式"></a>commit message 格式</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;<span class="built_in">type</span>&gt;(&lt;scope&gt;): &lt;subject&gt;</div><div class="line">// 空一行</div><div class="line">&lt;body&gt;</div><div class="line">// 空一行</div><div class="line">&lt;footer&gt;</div></pre></td></tr></table></figure>
+<p>其中，Header 是必需的，Body 和 Footer 可以省略。<br>Header部分：type（必需）、scope（可选）和subject（必需）<br>不管是哪一个部分，任何一行都不得超过72个字符（或100个字符）。这是为了避免自动换行影响美观。</p>
+<h3 id="type"><a href="#type" class="headerlink" title="type"></a>type</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">feat            <span class="comment"># 新功能（feature）</span></div><div class="line">fix             <span class="comment"># 修补bug</span></div><div class="line">docs            <span class="comment"># 文档（documentation）</span></div><div class="line">style           <span class="comment"># 格式（不影响代码运行的变动）</span></div><div class="line">refactor        <span class="comment"># 重构（即不是新增功能，也不是修改bug的代码变动）</span></div><div class="line"><span class="built_in">test</span>            <span class="comment"># 增加测试</span></div><div class="line">chore           <span class="comment"># 构建过程或辅助工具的变动</span></div></pre></td></tr></table></figure>
+<p>7种类型基本覆盖了所有需求，好开心。</p>
+<p>如果type为feat和fix，则该 commit 将肯定出现在 Change log 之中。其他情况（docs、chore、style、refactor、test）由你决定，要不要放入 Change log，建议是不要。</p>
+<h3 id="scope"><a href="#scope" class="headerlink" title="scope"></a>scope</h3><p>scope用于说明 commit 影响的范围，比如数据层、控制层、视图层等等，视项目不同而不同。</p>
+<h3 id="subject"><a href="#subject" class="headerlink" title="subject"></a>subject</h3><p>subject是 commit 目的的简短描述，不超过50个字符。</p>
+<h3 id="body"><a href="#body" class="headerlink" title="body"></a>body</h3><p>Body 部分是对本次 commit 的详细描述，可以分成多行</p>
+<ul>
+<li>以动词开头，使用第一人称现在时，比如change，而不是changed或changes</li>
+<li>第一个字母小写</li>
+<li>结尾不加句号（.）</li>
+</ul>
+<h3 id=""><a href="#" class="headerlink" title=""></a>footer</h3><ul>
+<li>不兼容变动</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">BREAKING CHANGE:</div></pre></td></tr></table></figure>
+<ul>
+<li>关闭 Issue</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Closes <span class="comment">#234</span></div></pre></td></tr></table></figure>
+<h2 id="Commitizen"><a href="#Commitizen" class="headerlink" title="Commitizen"></a>Commitizen</h2><p><a href="https://github.com/commitizen/cz-cli" target="_blank" rel="external">Commitizen</a>是一个撰写合格 Commit message 的工具。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">npm install -g commitizen</div><div class="line"><span class="built_in">cd</span> &#123;target&#125;</div><div class="line">commitizen init cz-conventional-changelog --save --save-exact</div></pre></td></tr></table></figure>
+<h2 id="validate-commit-msg"><a href="#validate-commit-msg" class="headerlink" title="validate-commit-msg"></a>validate-commit-msg</h2><p><a href="https://github.com/kentcdodds/validate-commit-msg" target="_blank" rel="external">validate-commit-msg</a> 用于检查 Node 项目的 Commit message 是否符合格式。</p>
+<h2 id="Change-log"><a href="#Change-log" class="headerlink" title="Change log"></a>Change log</h2><p><a href="https://github.com/ajoslin/conventional-changelog" target="_blank" rel="external">conventional-changelog</a> 就是生成 Change log 的工具，运行下面的命令即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">npm install -g conventional-changelog</div><div class="line"><span class="built_in">cd</span> my-project</div><div class="line">conventional-changelog -p angular -i CHANGELOG.md -w</div></pre></td></tr></table></figure>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html" target="_blank" rel="external">Commit message 和 Change log 编写指南</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;此处不得不赞叹一下阮老师的文笔和高产，膜拜中…🚬&lt;br&gt;浏览过不少开源项目了，也算是github的深水用户，但还真没有太注意人家的提交注释(commit message)有什么不一样，以及每次发版时长长的chang logs。感谢小伟哥的指导，技术视野上的差距还是蛮大的，刚把得💪&lt;/p&gt;
+&lt;p&gt;先来张&lt;a href=&quot;https://github.com/angular-ui/bootstrap&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;angular-ui-bootstrap&lt;/a&gt;库的commit截图&lt;br&gt;&lt;img src=&quot;http://i.niupic.com/images/2016/01/23/TF2n76.png&quot; alt=&quot;ui-bootstrap commit message&quot;&gt;&lt;/p&gt;
+&lt;p&gt;不管多少人提交代码，总是那么清晰爽快。&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>input-file定制样式</title>
+    <link href="https://feyy.github.io/2016/01/input-file-customer/"/>
+    <id>https://feyy.github.io/2016/01/input-file-customer/</id>
+    <published>2016-01-21T16:44:27.000Z</published>
+    <updated>2016-09-08T14:23:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>前端文件上传是个永恒的话题，不管是使用原先的form提交还是使用fileReader直接ajax提交Base64编码，最终的最终都离不开一个元素——input:file<br>这玩意长得丑不说，还在个家浏览器上长得不一样，堪称又丑又不自觉的典范。<br>躲是躲不掉的，那么作为一个注重美观的FE来说，改如何满足自己和客户呢？</p>
+<h2 id="透明配合绝对定位"><a href="#透明配合绝对定位" class="headerlink" title="透明配合绝对定位"></a>透明配合绝对定位</h2><p>使用<code>opacity:0;</code>使得input:file按钮处于透明状态，同时使用绝对定位使得他完全覆盖在模拟的上传按钮上。这样input:file接受click事件响应文件上传，模拟的按钮处于一层透明的薄膜下起显示作用</p>
+<h3 id="不兼容IE8-9-10"><a href="#不兼容IE8-9-10" class="headerlink" title="不兼容IE8/9/10"></a>不兼容IE8/9/10</h3><p>IE8/9/10下点击按钮的左侧类似输入框的东东无法弹出文件选择框，并且会出现光标…<br>因为input:file包括一个文本区域和一个浏览按钮，，在IE8/9/10中点击文本区域，是不会弹出文件选择框的，并且在所有的IE版本中即使将它设置为透明，依然会有光标的出现。</p>
+<p>解决方案：<strong>使用<code>font-size</code>属性把input:file的浏览按钮撑得足够大以至于完全覆盖显示区域</strong><br><a id="more"></a></p>
+<h2 id="隐藏input-file，手动触发click"><a href="#隐藏input-file，手动触发click" class="headerlink" title="隐藏input:file，手动触发click"></a>隐藏input:file，手动触发click</h2><p>如题所述，在点击模拟的按钮的时候通过js间接触发input:file的click事件来触发上传。</p>
+<h3 id="IE8不干了"><a href="#IE8不干了" class="headerlink" title="IE8不干了"></a>IE8不干了</h3><p>IE8出于安全的考虑不允许提交手动触发过click事件的</p>
+<p>解决方案：<strong>利用lable标签与表单元素的关联触发效果，使用label来模拟按钮，for属性指向input:file的id值</strong></p>
+<p>同时input[type=file]的display属性不能为none，否则就不会起作用。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://fedvic.com/2015/11/15/inputfile/customCSS/index.html" target="_blank" rel="external">关于input[type=file]那些事：如何定制样式</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;前端文件上传是个永恒的话题，不管是使用原先的form提交还是使用fileReader直接ajax提交Base64编码，最终的最终都离不开一个元素——input:file&lt;br&gt;这玩意长得丑不说，还在个家浏览器上长得不一样，堪称又丑又不自觉的典范。&lt;br&gt;躲是躲不掉的，那么作为一个注重美观的FE来说，改如何满足自己和客户呢？&lt;/p&gt;
+&lt;h2 id=&quot;透明配合绝对定位&quot;&gt;&lt;a href=&quot;#透明配合绝对定位&quot; class=&quot;headerlink&quot; title=&quot;透明配合绝对定位&quot;&gt;&lt;/a&gt;透明配合绝对定位&lt;/h2&gt;&lt;p&gt;使用&lt;code&gt;opacity:0;&lt;/code&gt;使得input:file按钮处于透明状态，同时使用绝对定位使得他完全覆盖在模拟的上传按钮上。这样input:file接受click事件响应文件上传，模拟的按钮处于一层透明的薄膜下起显示作用&lt;/p&gt;
+&lt;h3 id=&quot;不兼容IE8-9-10&quot;&gt;&lt;a href=&quot;#不兼容IE8-9-10&quot; class=&quot;headerlink&quot; title=&quot;不兼容IE8/9/10&quot;&gt;&lt;/a&gt;不兼容IE8/9/10&lt;/h3&gt;&lt;p&gt;IE8/9/10下点击按钮的左侧类似输入框的东东无法弹出文件选择框，并且会出现光标…&lt;br&gt;因为input:file包括一个文本区域和一个浏览按钮，，在IE8/9/10中点击文本区域，是不会弹出文件选择框的，并且在所有的IE版本中即使将它设置为透明，依然会有光标的出现。&lt;/p&gt;
+&lt;p&gt;解决方案：&lt;strong&gt;使用&lt;code&gt;font-size&lt;/code&gt;属性把input:file的浏览按钮撑得足够大以至于完全覆盖显示区域&lt;/strong&gt;&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="input-file" scheme="https://feyy.github.io/tags/input-file/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>simple stress testing tool</title>
+    <link href="https://feyy.github.io/2016/01/simple-stress-testing-tool/"/>
+    <id>https://feyy.github.io/2016/01/simple-stress-testing-tool/</id>
+    <published>2016-01-20T17:48:10.000Z</published>
+    <updated>2016-09-08T14:23:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>介绍两款简单的压力测试软件<a href="http://home.tiscali.cz/~cz210552/webbench.html" target="_blank" rel="external">webbench</a>和<a href="https://www.joedog.org/" target="_blank" rel="external">siege</a>，使用起来都非常方便。</p>
+<h2 id="siege"><a href="#siege" class="headerlink" title="siege"></a>siege</h2><p>这还是2BB的找了半天，然后在自己机器上编译安装的产物…结果后来发现mac自带webbenc，欲哭无泪啊。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">curl -O http://download.joedog.org/siege/siege-latest.tar.gz</div><div class="line">tar -zxvf siege-latest.tar.gz</div><div class="line"><span class="built_in">cd</span> siege-*</div><div class="line">./configure</div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure>
+<h3 id="使用实例"><a href="#使用实例" class="headerlink" title="使用实例"></a>使用实例</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">siege -c 10 -t 10M https://www.baidu.com        <span class="comment"># 并发数10持续时间10min的请求百度</span></div><div class="line">siege -t 100s -f url.txt                        <span class="comment"># 持续请求url.txt中的url列表100s,每次取一个url</span></div></pre></td></tr></table></figure>
+<h3 id="参数详解"><a href="#参数详解" class="headerlink" title="参数详解"></a>参数详解</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">-C | –config               <span class="comment"># 在屏幕上打印显示出当前的配置,配置是包括在他的配置文件$HOME/.siegerc中</span></div><div class="line">                           <span class="comment">#    可以编辑里面的参数,这样每次siege 都会按照它运行</span></div><div class="line">-v                         <span class="comment"># 运行时能看到详细的运行信息</span></div><div class="line">-c n | –concurrent=n       <span class="comment"># 模拟有n个用户在同时访问,n不要设得太大,因为越大,siege 消耗本地机器的资源越多</span></div><div class="line">-i | –internet             <span class="comment"># 随机访问urls.txt中的url列表项,以此模拟真实的访问情况(随机性),当urls.txt存在是有效</span></div><div class="line">-d n | –delay=n            <span class="comment"># hit每个url之间的延迟,在0-n之间</span></div><div class="line">-r n | –reps=n             <span class="comment"># 重复运行测试n次,不能与 -t同时存在</span></div><div class="line">-t n | –time=n             <span class="comment"># 持续运行siege ‘n’秒(如10S),分钟(10M),小时(10H)</span></div><div class="line">-l                         <span class="comment"># 运行结束,将统计数据保存到日志文件中siege.log</span></div><div class="line">                           <span class="comment">#    一般位于/usr/local/var/siege .log中,也可在.siegerc中自定义</span></div><div class="line">-R SIEGERC | –rc=SIEGERC   <span class="comment"># 指定用特定的siege 配置文件来运行,默认的为$HOME/.siegerc</span></div><div class="line">-f FILE | –file=FILE       <span class="comment"># 指定用特定的urls文件运行siege ,默认为urls.txt,位于siege 安装目录下的etc/urls.txt</span></div><div class="line">-u URL | –url=URL          <span class="comment"># 测试指定的一个URL,对它进行”siege “,此选项会忽略有关urls文件的设定</span></div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h3 id="结果说明"><a href="#结果说明" class="headerlink" title="结果说明"></a>结果说明</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">Transactions: 30000 hits                <span class="comment"># 完成30000次处理</span></div><div class="line">Availability: 100.00 %                  <span class="comment"># 100.00 % 成功率</span></div><div class="line">Elapsed time: 68.59 secs                <span class="comment"># 总共使用时间</span></div><div class="line">Data transferred: 817.76 MB             <span class="comment"># 共数据传输 817.76 MB</span></div><div class="line">Response time: 0.04 secs                <span class="comment"># 响应时间，显示网络连接的速度</span></div><div class="line">Transaction rate: 437.38 trans/sec      <span class="comment"># 平均每秒完成 437.38 次处理</span></div><div class="line">Throughput: 11.92 MB/sec                <span class="comment"># 平均每秒传送数据</span></div><div class="line">Concurrency: 17.53                      <span class="comment"># 实际最高并发连接数</span></div><div class="line">Successful transactions: 30000          <span class="comment"># 成功处理次数</span></div><div class="line">Failed transactions: 0                  <span class="comment"># 失败处理次数</span></div><div class="line">Longest transaction: 3.12               <span class="comment"># 每次传输所花最长时间</span></div><div class="line">Shortest transaction: 0.00              <span class="comment"># 每次传输所花最短时间</span></div></pre></td></tr></table></figure>
+<h2 id="webbench"><a href="#webbench" class="headerlink" title="webbench"></a>webbench</h2><p>webbench是一枚强大得可以的压力测试工具，它最多可以模拟3万个并发连接去测试网站的负载能力。使用方法跟siege大致相同，只是在参数上有些许差别。</p>
+<h3 id="使用实例-1"><a href="#使用实例-1" class="headerlink" title="使用实例"></a>使用实例</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">webbench -c 10 -t 10 https://www.baidu.com        <span class="comment"># 并发数10持续时间10s的请求百度</span></div><div class="line">webbench -t 100 -f https://www.baidu.com          <span class="comment"># 强制请求100s百度，不等待返回结果</span></div></pre></td></tr></table></figure>
+<h3 id="参数详解-1"><a href="#参数详解-1" class="headerlink" title="参数详解"></a>参数详解</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">-f | --force                   <span class="comment"># 不等待服务器返回结果继续发起请求</span></div><div class="line">-r | --reload                  <span class="comment"># 请求头部信息带no-cahe参数：Pragma: no-cache.</span></div><div class="line">-t | --time &lt;sec&gt;              <span class="comment"># 请求持续时间，默认30s</span></div><div class="line">-p | --proxy &lt;server:port&gt;     <span class="comment"># 使用代理服务器请求</span></div><div class="line">-c | --clients &lt;n&gt;             <span class="comment"># 一次发起n次请求，即请求并发</span></div><div class="line">-9 | --http09                  <span class="comment"># 使用HTTP/0.9协议请求</span></div><div class="line">-1 | --http10                  <span class="comment"># 使用HTTP/1.0协议请求</span></div><div class="line">-2 | --http11                  <span class="comment"># 使用HTTP/1.1协议请求</span></div><div class="line">--get                          <span class="comment"># 使用get方法请求</span></div><div class="line">--head                         <span class="comment"># 使用head方法请求</span></div><div class="line">--options                      <span class="comment"># 使用options方法请求</span></div><div class="line">--trace                        <span class="comment"># 使用trace方法请求</span></div><div class="line">-? | -h | --<span class="built_in">help</span>               <span class="comment"># 帮助信息</span></div><div class="line">-V | --version                 <span class="comment"># 查看版本信息</span></div></pre></td></tr></table></figure>
+<h2 id="YY"><a href="#YY" class="headerlink" title="YY"></a>YY</h2><p>要是有几台机器一致请求一下别人的服务器应该还是蛮好玩的😱</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;介绍两款简单的压力测试软件&lt;a href=&quot;http://home.tiscali.cz/~cz210552/webbench.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;webbench&lt;/a&gt;和&lt;a href=&quot;https://www.joedog.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;siege&lt;/a&gt;，使用起来都非常方便。&lt;/p&gt;
+&lt;h2 id=&quot;siege&quot;&gt;&lt;a href=&quot;#siege&quot; class=&quot;headerlink&quot; title=&quot;siege&quot;&gt;&lt;/a&gt;siege&lt;/h2&gt;&lt;p&gt;这还是2BB的找了半天，然后在自己机器上编译安装的产物…结果后来发现mac自带webbenc，欲哭无泪啊。&lt;/p&gt;
+&lt;h3 id=&quot;安装&quot;&gt;&lt;a href=&quot;#安装&quot; class=&quot;headerlink&quot; title=&quot;安装&quot;&gt;&lt;/a&gt;安装&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;curl -O http://download.joedog.org/siege/siege-latest.tar.gz&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;tar -zxvf siege-latest.tar.gz&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;cd&lt;/span&gt; siege-*&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;./configure&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;make &amp;amp;&amp;amp; make install&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;使用实例&quot;&gt;&lt;a href=&quot;#使用实例&quot; class=&quot;headerlink&quot; title=&quot;使用实例&quot;&gt;&lt;/a&gt;使用实例&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;siege -c 10 -t 10M https://www.baidu.com        &lt;span class=&quot;comment&quot;&gt;# 并发数10持续时间10min的请求百度&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;siege -t 100s -f url.txt                        &lt;span class=&quot;comment&quot;&gt;# 持续请求url.txt中的url列表100s,每次取一个url&lt;/span&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;参数详解&quot;&gt;&lt;a href=&quot;#参数详解&quot; class=&quot;headerlink&quot; title=&quot;参数详解&quot;&gt;&lt;/a&gt;参数详解&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;-C | –config               &lt;span class=&quot;comment&quot;&gt;# 在屏幕上打印显示出当前的配置,配置是包括在他的配置文件$HOME/.siegerc中&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;                           &lt;span class=&quot;comment&quot;&gt;#    可以编辑里面的参数,这样每次siege 都会按照它运行&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;-v                         &lt;span class=&quot;comment&quot;&gt;# 运行时能看到详细的运行信息&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;-c n | –concurrent=n       &lt;span class=&quot;comment&quot;&gt;# 模拟有n个用户在同时访问,n不要设得太大,因为越大,siege 消耗本地机器的资源越多&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;-i | –internet             &lt;span class=&quot;comment&quot;&gt;# 随机访问urls.txt中的url列表项,以此模拟真实的访问情况(随机性),当urls.txt存在是有效&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;-d n | –delay=n            &lt;span class=&quot;comment&quot;&gt;# hit每个url之间的延迟,在0-n之间&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;-r n | –reps=n             &lt;span class=&quot;comment&quot;&gt;# 重复运行测试n次,不能与 -t同时存在&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;-t n | –time=n             &lt;span class=&quot;comment&quot;&gt;# 持续运行siege ‘n’秒(如10S),分钟(10M),小时(10H)&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;-l                         &lt;span class=&quot;comment&quot;&gt;# 运行结束,将统计数据保存到日志文件中siege.log&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;                           &lt;span class=&quot;comment&quot;&gt;#    一般位于/usr/local/var/siege .log中,也可在.siegerc中自定义&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;-R SIEGERC | –rc=SIEGERC   &lt;span class=&quot;comment&quot;&gt;# 指定用特定的siege 配置文件来运行,默认的为$HOME/.siegerc&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;-f FILE | –file=FILE       &lt;span class=&quot;comment&quot;&gt;# 指定用特定的urls文件运行siege ,默认为urls.txt,位于siege 安装目录下的etc/urls.txt&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;-u URL | –url=URL          &lt;span class=&quot;comment&quot;&gt;# 测试指定的一个URL,对它进行”siege “,此选项会忽略有关urls文件的设定&lt;/span&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+    
+      <category term="test" scheme="https://feyy.github.io/tags/test/"/>
+    
+      <category term="tool" scheme="https://feyy.github.io/tags/tool/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>动画性能（二）</title>
+    <link href="https://feyy.github.io/2016/01/animation-performance-2/"/>
+    <id>https://feyy.github.io/2016/01/animation-performance-2/</id>
+    <published>2016-01-18T17:12:13.000Z</published>
+    <updated>2016-09-08T14:23:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>水了好几天的日记了，居然忘了最重要的YY环节…</p>
+<h2 id="动画帧和帧率"><a href="#动画帧和帧率" class="headerlink" title="动画帧和帧率"></a>动画帧和帧率</h2><p>动画是由一帧一帧构成的。帧可以理解为是动画过程的一张张照片。<br>动画的性能(视觉上的卡顿程度)与帧率有关，也就是1s钟内有多少帧。60fps表示1s钟有60帧。<br>我们一般使用的显示器刷新率是60Hz，也就是1s钟刷新60次。对于人眼来说就是1s钟看到了60张照片，由于人眼的视觉暂留使得两张照片得以连贯过渡，从而形成动画。说成帧率的话也就是60fps，因而60fps是所有web动画追求的极致。<br>通常来说动画如果低于30fps将无法接受。强调动画性能在某种程度上就是获得更高的帧率。</p>
+<h2 id="帧绘制"><a href="#帧绘制" class="headerlink" title="帧绘制"></a>帧绘制</h2><p>那么在web中，每一帧的绘制流程是怎样的呢？</p>
+<ol>
+<li>javascript执行（function call）</li>
+<li>计算需要被加载到节点上的样式结果（Recalculate style–样式重计算） </li>
+<li>为每个节点生成图形和位置（Layout–回流和重布局） </li>
+<li>将每个节点填充到图层中（Paint Setup和Paint–重绘） </li>
+<li>组合图层到页面上（Composite Layers–图层重组）</li>
+</ol>
+<p><img src="http://www.html5rocks.com/en/tutorials/speed/high-performance-animations/devtools-waterfall.jpg" alt="frame-flow"><br>动画性能优化的核心也就是<strong>缩小每帧绘制所需要的时间，尽量在1/60s内完成，从而达到60fps</strong>。<br>上面的步骤有些是可以省略的，优化点就是去省略或者压缩每个点所需的时间。<br>如变换（ transform ）和透明度（ opacity ）的改变就不会触发2、3、4过程。<br><a id="more"></a></p>
+<h2 id="触发样式重计算"><a href="#触发样式重计算" class="headerlink" title="触发样式重计算"></a>触发样式重计算</h2><p>CSS类的改变会触发样式重计算。后面的流程当然一个不可能少，因而开销很大。</p>
+<h2 id="CSS属性分类"><a href="#CSS属性分类" class="headerlink" title="CSS属性分类"></a>CSS属性分类</h2><p>不同CSS属性的改变会触发不同的帧绘制流程。</p>
+<h3 id="触发重布局的属性"><a href="#触发重布局的属性" class="headerlink" title="触发重布局的属性"></a>触发重布局的属性</h3><p>当你改变他时，会需要重新布局（这也意味着需要重新计算其他被影响的节点的位置和大小）。被影响的DOM树越大（可见节点），重绘所需要的时间就会越长。</p>
+<ul>
+<li>盒模型相关属性：width, height, padding, margin, display, border-width, border, min-height</li>
+<li>定位属性和浮动：top, bottom, left, right, position, float, clear</li>
+<li>改变内部文字结构：text-align, overflow-y, font-weight, overflow, font-family, line-height, vertival-align, white-space, font-size</li>
+</ul>
+<h3 id="只触发重绘的属性"><a href="#只触发重绘的属性" class="headerlink" title="只触发重绘的属性"></a>只触发重绘的属性</h3><p>color, border-style, border-radius, visibility, text-decoration, background, background-image, background-position, background-repeat, background-size, outline-color, outline, outline-style, outline-width, box-shadow</p>
+<p><strong>手机就算重绘也很慢</strong><br>在重绘时，这些节点会被加载到GPU中进行重绘，这对移动设备如手机的影响还是很大的。因为CPU不如台式机或笔记本电脑，所以绘画巫妖的时间更长。而且CPU与GPU之间的有较大的带宽限制，所以纹理的上传需要一定时间</p>
+<h3 id="触发图层重组的属性"><a href="#触发图层重组的属性" class="headerlink" title="触发图层重组的属性"></a>触发图层重组的属性</h3><p>opacity, transform<br>可见使用opacity和transform(translate, rotate, scale…)创建动画是开销最小的方式。</p>
+<h2 id="JS动画"><a href="#JS动画" class="headerlink" title="JS动画"></a>JS动画</h2><p>前面提到过显示器刷新率多为60Hz，那么要获得更流畅的动画体验，动画的刷新时间和显示器刷新应该吻合。纯CSS动画由浏览器内部机制去保证，那么js该如何做呢。<br>一个新的方法<code>requestAnimationFrame</code>, 该方法告诉浏览器JavaScript想发起一个动画帧，然后在动画帧绘制之前，需要做一些动作，这样浏览器可以根据需要来优化自己的mainloop机制和调用时间点，以达到较好地平衡效果。</p>
+<h2 id="YY"><a href="#YY" class="headerlink" title="YY"></a>YY</h2><p>为了实现高效的动画我们应该这样来：</p>
+<ul>
+<li>为复杂动画元素创建独立的渲染层</li>
+<li>按照帧绘制流程优先选用影响最小的CSS属性(opacity, transform)</li>
+<li>js动画应使用<code>requestAnimationFrame</code>来控制绘制时机</li>
+<li>js动画的每帧计算时间应该小于1/60s</li>
+</ul>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://www.tuicool.com/articles/NBbQjy3" target="_blank" rel="external">前端性能优化（CSS动画篇）</a></li>
+<li><a href="http://www.html5rocks.com/zh/tutorials/speed/layers/" target="_blank" rel="external">Accelerated Rendering in Chrome</a></li>
+<li><a href="http://www.html5rocks.com/en/tutorials/speed/high-performance-animations/" target="_blank" rel="external">High Performance Animations</a></li>
+<li><a href="http://blog.csdn.net/milado_nju/article/details/8101188" target="_blank" rel="external">Chromium渲染主循环(mainloop)和requestAnimationFrame</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;水了好几天的日记了，居然忘了最重要的YY环节…&lt;/p&gt;
+&lt;h2 id=&quot;动画帧和帧率&quot;&gt;&lt;a href=&quot;#动画帧和帧率&quot; class=&quot;headerlink&quot; title=&quot;动画帧和帧率&quot;&gt;&lt;/a&gt;动画帧和帧率&lt;/h2&gt;&lt;p&gt;动画是由一帧一帧构成的。帧可以理解为是动画过程的一张张照片。&lt;br&gt;动画的性能(视觉上的卡顿程度)与帧率有关，也就是1s钟内有多少帧。60fps表示1s钟有60帧。&lt;br&gt;我们一般使用的显示器刷新率是60Hz，也就是1s钟刷新60次。对于人眼来说就是1s钟看到了60张照片，由于人眼的视觉暂留使得两张照片得以连贯过渡，从而形成动画。说成帧率的话也就是60fps，因而60fps是所有web动画追求的极致。&lt;br&gt;通常来说动画如果低于30fps将无法接受。强调动画性能在某种程度上就是获得更高的帧率。&lt;/p&gt;
+&lt;h2 id=&quot;帧绘制&quot;&gt;&lt;a href=&quot;#帧绘制&quot; class=&quot;headerlink&quot; title=&quot;帧绘制&quot;&gt;&lt;/a&gt;帧绘制&lt;/h2&gt;&lt;p&gt;那么在web中，每一帧的绘制流程是怎样的呢？&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;javascript执行（function call）&lt;/li&gt;
+&lt;li&gt;计算需要被加载到节点上的样式结果（Recalculate style–样式重计算） &lt;/li&gt;
+&lt;li&gt;为每个节点生成图形和位置（Layout–回流和重布局） &lt;/li&gt;
+&lt;li&gt;将每个节点填充到图层中（Paint Setup和Paint–重绘） &lt;/li&gt;
+&lt;li&gt;组合图层到页面上（Composite Layers–图层重组）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&quot;http://www.html5rocks.com/en/tutorials/speed/high-performance-animations/devtools-waterfall.jpg&quot; alt=&quot;frame-flow&quot;&gt;&lt;br&gt;动画性能优化的核心也就是&lt;strong&gt;缩小每帧绘制所需要的时间，尽量在1/60s内完成，从而达到60fps&lt;/strong&gt;。&lt;br&gt;上面的步骤有些是可以省略的，优化点就是去省略或者压缩每个点所需的时间。&lt;br&gt;如变换（ transform ）和透明度（ opacity ）的改变就不会触发2、3、4过程。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="animation" scheme="https://feyy.github.io/tags/animation/"/>
+    
+      <category term="performance" scheme="https://feyy.github.io/tags/performance/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>动画性能（一）</title>
+    <link href="https://feyy.github.io/2016/01/animation-performance-1/"/>
+    <id>https://feyy.github.io/2016/01/animation-performance-1/</id>
+    <published>2016-01-17T18:39:39.000Z</published>
+    <updated>2016-09-08T14:23:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>作为一个前端，没有流畅的动画的话，那只能是个切图的…直入主题了，好困的…</p>
+<h2 id="图层"><a href="#图层" class="headerlink" title="图层"></a>图层</h2><p>用过PS的切图仔肯定知道射鸡师们给出的psd是由一个个图层组成的。不过不知道你是否留意到，你所写的前端页面也是由一个个图层堆叠而成的。<br>浏览器在渲染一个页面时，会将页面分为很多个图层，图层有大有小，每个图层上有一个或多个节点。<br>在渲染DOM的时候，浏览器所做的工作实际上是：  </p>
+<ol>
+<li>获取DOM后分割为多个图层 </li>
+<li>对每个图层的节点计算样式结果（Recalculate style–样式重计算） </li>
+<li>为每个节点生成图形和位置（Layout–回流和重布局） </li>
+<li>将每个节点绘制填充到图层位图中（Paint Setup和Paint–重绘） </li>
+<li>图层作为纹理上传至GPU </li>
+<li>符合多个图层到页面上生成最终屏幕图像（Composite Layers–图层重组）</li>
+</ol>
+<p><strong>Chrome子开发者工具台中勾选“show layer borders”标记(在 “rendering” 标题下)，它会高亮屏幕上的层。</strong></p>
+<h3 id="图层创建的标准"><a href="#图层创建的标准" class="headerlink" title="图层创建的标准"></a>图层创建的标准</h3><p>下面为chrome启发式创建图层的条件：</p>
+<ul>
+<li>3D 或透视变换(perspective transform) CSS 属性</li>
+<li>使用加速视频解码的 <code>&lt;video&gt;</code> 元素</li>
+<li>拥有 3D (WebGL) 上下文或加速的 2D 上下文的 <code>&lt;canvas&gt;</code> 元素</li>
+<li>混合插件(如 Flash)</li>
+<li>对自己的 opacity 做 CSS 动画或使用一个动画变换的元素</li>
+<li>拥有加速 CSS 过滤器的元素</li>
+<li>元素有一个包含复合层的后代节点(换句话说，就是一个元素拥有一个子元素，该子元素在自己的层里)</li>
+<li>元素有一个 z-index 较低且包含一个复合层的兄弟元素(换句话说就是该元素在复合层上面渲染)</li>
+</ul>
+<p><strong>需要注意的是，如果图层中某个元素需要重绘，那么整个图层都需要重绘。</strong></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://www.tuicool.com/articles/NBbQjy3" target="_blank" rel="external">前端性能优化（CSS动画篇）</a></li>
+<li><a href="http://www.html5rocks.com/zh/tutorials/speed/layers/" target="_blank" rel="external">Accelerated Rendering in Chrome</a></li>
+<li><a href="http://www.html5rocks.com/en/tutorials/speed/high-performance-animations/" target="_blank" rel="external">High Performance Animations</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;作为一个前端，没有流畅的动画的话，那只能是个切图的…直入主题了，好困的…&lt;/p&gt;
+&lt;h2 id=&quot;图层&quot;&gt;&lt;a href=&quot;#图层&quot; class=&quot;headerlink&quot; title=&quot;图层&quot;&gt;&lt;/a&gt;图层&lt;/h2&gt;&lt;p&gt;用过PS的切图仔肯定知道射鸡师们给出的psd是由一个
+    
+    </summary>
+    
+    
+      <category term="animation" scheme="https://feyy.github.io/tags/animation/"/>
+    
+      <category term="performance" scheme="https://feyy.github.io/tags/performance/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>javascript中的数据类型判断</title>
+    <link href="https://feyy.github.io/2016/01/data-type-toString/"/>
+    <id>https://feyy.github.io/2016/01/data-type-toString/</id>
+    <published>2016-01-16T18:22:16.000Z</published>
+    <updated>2016-09-08T14:23:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>靠，周末比平时还累，好不容易补完了昨天的一篇…看来今天又要水一篇了😭。</p>
+<h2 id="typeof"><a href="#typeof" class="headerlink" title="typeof"></a>typeof</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>结构</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Undefined</td>
+<td>undefined</td>
+</tr>
+<tr>
+<td>Null</td>
+<td>object (😣)</td>
+</tr>
+<tr>
+<td>布尔值</td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>数值</td>
+<td>number</td>
+</tr>
+<tr>
+<td>字符串</td>
+<td>string</td>
+</tr>
+<tr>
+<td>Symbol (ECMAScript 6 新增)</td>
+<td>symbol</td>
+</tr>
+<tr>
+<td>函数对象 (implements [[Call]] in ECMA-262 terms)</td>
+<td>function</td>
+</tr>
+<tr>
+<td>任何其他对象</td>
+<td>object</td>
+</tr>
+</tbody>
+</table>
+<p><strong>能认识的就这么多了，君看着办吧</strong></p>
+<h2 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h2><p>注意了这货不能跨环境，如多个frame或window。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">object <span class="keyword">instanceof</span> <span class="keyword">constructor</span></div></pre></td></tr></table></figure>
+<p><strong>我们玩个真心话大冒险吧，你随便问，不过我只能回答“是”或者“否”，你开始吧</strong></p>
+<h2 id="toString-NaN"><a href="#toString-NaN" class="headerlink" title="toString()"></a>toString()</h2><p>猪脚上传…🐷…长相很一般吗…<br><a id="more"></a><br><code>toString</code>方法的主要用途是返回对象的字符串形式。<br>但使用call方法，可以在任意值上调用Object.prototype.toString方法，从而帮助我们判断这个值的类型。</p>
+<ul>
+<li>数值：返回[object Number]。</li>
+<li>字符串：返回[object String]。</li>
+<li>布尔值：返回[object Boolean]。</li>
+<li>undefined：返回[object Undefined]。</li>
+<li>null：返回[object Null]。</li>
+<li>数组：返回[object Array]。</li>
+<li>arguments对象：返回[object Arguments]。</li>
+<li>函数：返回[object Function]。</li>
+<li>Error对象：返回[object Error]。</li>
+<li>Date对象：返回[object Date]。</li>
+<li>RegExp对象：返回[object RegExp]。</li>
+<li>其他对象：返回[object “ + 构造函数的名称 + “]。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="number">2</span>)           <span class="comment">// "[object Number]"</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="string">''</span>)          <span class="comment">// "[object String]"</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">true</span>)        <span class="comment">// "[object Boolean]"</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">undefined</span>)   <span class="comment">// "[object Undefined]"</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">null</span>)        <span class="comment">// "[object Null]"</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="built_in">Math</span>)        <span class="comment">// "[object Math]"</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.call(&#123;&#125;)          <span class="comment">// "[object Object]"</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.call([])          <span class="comment">// "[object Array]"</span></div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;靠，周末比平时还累，好不容易补完了昨天的一篇…看来今天又要水一篇了😭。&lt;/p&gt;
+&lt;h2 id=&quot;typeof&quot;&gt;&lt;a href=&quot;#typeof&quot; class=&quot;headerlink&quot; title=&quot;typeof&quot;&gt;&lt;/a&gt;typeof&lt;/h2&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;类型&lt;/th&gt;
+&lt;th&gt;结构&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Undefined&lt;/td&gt;
+&lt;td&gt;undefined&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Null&lt;/td&gt;
+&lt;td&gt;object (😣)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;布尔值&lt;/td&gt;
+&lt;td&gt;boolean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;数值&lt;/td&gt;
+&lt;td&gt;number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;字符串&lt;/td&gt;
+&lt;td&gt;string&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Symbol (ECMAScript 6 新增)&lt;/td&gt;
+&lt;td&gt;symbol&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;函数对象 (implements [[Call]] in ECMA-262 terms)&lt;/td&gt;
+&lt;td&gt;function&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;任何其他对象&lt;/td&gt;
+&lt;td&gt;object&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;能认识的就这么多了，君看着办吧&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&quot;instanceof&quot;&gt;&lt;a href=&quot;#instanceof&quot; class=&quot;headerlink&quot; title=&quot;instanceof&quot;&gt;&lt;/a&gt;instanceof&lt;/h2&gt;&lt;p&gt;注意了这货不能跨环境，如多个frame或window。&lt;/p&gt;
+&lt;figure class=&quot;highlight javascript&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;object &lt;span class=&quot;keyword&quot;&gt;instanceof&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;constructor&lt;/span&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;我们玩个真心话大冒险吧，你随便问，不过我只能回答“是”或者“否”，你开始吧&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&quot;toString-NaN&quot;&gt;&lt;a href=&quot;#toString-NaN&quot; class=&quot;headerlink&quot; title=&quot;toString()&quot;&gt;&lt;/a&gt;toString()&lt;/h2&gt;&lt;p&gt;猪脚上传…🐷…长相很一般吗…&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="javascript" scheme="https://feyy.github.io/tags/javascript/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Object in ES5</title>
+    <link href="https://feyy.github.io/2016/01/object-es5/"/>
+    <id>https://feyy.github.io/2016/01/object-es5/</id>
+    <published>2016-01-15T19:21:21.000Z</published>
+    <updated>2016-09-08T14:23:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Object-create-proto-descriptors"><a href="#Object-create-proto-descriptors" class="headerlink" title="Object.create(proto[, descriptors])"></a>Object.create(proto[, descriptors])</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 指定原型创建空对象</span></div><div class="line"><span class="built_in">Object</span>.create(proto)</div><div class="line"><span class="comment">// 指定原型和属性秒速来创建一个对象</span></div><div class="line"><span class="built_in">Object</span>.create(proto, descriptors)</div><div class="line"></div><div class="line"><span class="comment">// example</span></div><div class="line"><span class="keyword">var</span> obj = <span class="built_in">Object</span>.create(&#123;<span class="attr">x</span>: <span class="number">1</span>&#125;, &#123;</div><div class="line">    <span class="attr">z</span>: &#123;</div><div class="line">        <span class="attr">value</span>: <span class="number">3</span>,</div><div class="line">        <span class="attr">writable</span>: <span class="literal">true</span>,</div><div class="line">        <span class="attr">enumerable</span>: <span class="literal">true</span>,</div><div class="line">        <span class="attr">configurable</span>:<span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h3 id="属性描述"><a href="#属性描述" class="headerlink" title="属性描述"></a>属性描述</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123; </div><div class="line">    <span class="attr">value</span>: <span class="number">3</span>,               <span class="comment">// 属性值</span></div><div class="line">    writable: <span class="literal">true</span>,         <span class="comment">// 属性是否可写, 默认为false</span></div><div class="line">    enumerable: <span class="literal">true</span>,       <span class="comment">// 属性是否可枚举, 默认为false [当使用for/in语句时，该property是否会被枚举]</span></div><div class="line">    configurable: <span class="literal">true</span>      <span class="comment">// 属性是否可配置, 默认为false [该property的属性是否可以修改(如由不可写改为可写)，property是否可以删除]</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>使用 <code>obj.a = 123;</code> 创建的属性writable, enumerable, configurable属性均为true</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 拥有getter和setter的属性是否可读写取决于是否有get和set函数，因此没有value和writable属性</span></div><div class="line">&#123;</div><div class="line">    <span class="attr">get</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;...&#125;,</div><div class="line">    <span class="attr">set</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;...&#125;,</div><div class="line">    <span class="attr">enumerable</span>: <span class="literal">true</span>,</div><div class="line">    <span class="attr">configurable</span>: <span class="literal">true</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// example</span></div><div class="line"><span class="keyword">var</span> o =&#123;</div><div class="line">  <span class="attr">$n</span> : <span class="number">5</span>,</div><div class="line">  get next()&#123;<span class="keyword">return</span> <span class="keyword">this</span>.$n++;&#125;,</div><div class="line">  set next(n) &#123;<span class="keyword">this</span>.$n = n;&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="Object-defineProperties-obj-descriptors"><a href="#Object-defineProperties-obj-descriptors" class="headerlink" title="Object.defineProperties(obj, descriptors)"></a>Object.defineProperties(obj, descriptors)</h2><p>创建或配置对象的多个属性</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * @param &#123;object&#125; obj 要在其上创建或者配置属性的对象</div><div class="line"> * @param &#123;object&#125; descriptors 将属性名映射到属性描述符的对象</div><div class="line"> * @return &#123;object&#125; obj 返回传入的obj对象</div><div class="line"> */</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.defineProperties(obj,&#123;</div><div class="line">    <span class="attr">a</span>:&#123;<span class="attr">value</span>:<span class="string">"a"</span>,<span class="attr">writable</span>:<span class="literal">false</span>,<span class="attr">enumerable</span>:<span class="literal">true</span>,<span class="attr">configurable</span>:<span class="literal">true</span>&#125;,</div><div class="line">    <span class="attr">b</span>:&#123;<span class="attr">value</span>:<span class="string">"b"</span>,<span class="attr">writable</span>:<span class="literal">false</span>,<span class="attr">enumerable</span>:<span class="literal">true</span>,<span class="attr">configurable</span>:<span class="literal">true</span>&#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h2 id="Object-defineProperty-obj-name-desc"><a href="#Object-defineProperty-obj-name-desc" class="headerlink" title="Object.defineProperty(obj, name, desc)"></a>Object.defineProperty(obj, name, desc)</h2><p>创建或配置对象的一个属性<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * @param &#123;object&#125; obj 要在其上创建或者配置属性的对象</div><div class="line"> * @param &#123;string&#125; name 将属性名映射到属性描述符的对象</div><div class="line"> * @param &#123;object&#125; desc 一个属性描述符对象，描述要创建的新属性或对现有属性的修改</div><div class="line"> * @return &#123;object&#125; obj 返回传入的obj对象</div><div class="line"> */</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.defineProperty(obj, <span class="string">"c"</span>, &#123; </div><div class="line">    <span class="attr">value</span>: <span class="string">"c"</span>,</div><div class="line">    <span class="attr">writable</span>:<span class="literal">false</span>, </div><div class="line">    <span class="attr">enumerable</span>:<span class="literal">false</span>, </div><div class="line">    <span class="attr">configurable</span>:<span class="literal">true</span></div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<h2 id="Object-getOwnPropertyDescriptor-obj-name"><a href="#Object-getOwnPropertyDescriptor-obj-name" class="headerlink" title="Object.getOwnPropertyDescriptor(obj, name)"></a>Object.getOwnPropertyDescriptor(obj, name)</h2><p>查询一个属性的描述对象。<br>返回对象指定属性的一个属性描述符对象，如果不存在指定属性则返回undefined.</p>
+<h2 id="Object-getPrototypeOf-obj"><a href="#Object-getPrototypeOf-obj" class="headerlink" title="Object.getPrototypeOf(obj)"></a>Object.getPrototypeOf(obj)</h2><p>返回一个对象的原型</p>
+<h2 id="obj1-isPrototypeOf-obj2"><a href="#obj1-isPrototypeOf-obj2" class="headerlink" title="obj1.isPrototypeOf(obj2)"></a>obj1.isPrototypeOf(obj2)</h2><p>判断当前对象是否为另一个对象的原型</p>
+<h2 id="Object-getOwnPropertyNames-obj"><a href="#Object-getOwnPropertyNames-obj" class="headerlink" title="Object.getOwnPropertyNames(obj)"></a>Object.getOwnPropertyNames(obj)</h2><p>返回非继承属性的名字。包括那些不可枚举的属性。</p>
+<h2 id="Object-keys-obj"><a href="#Object-keys-obj" class="headerlink" title="Object.keys(obj)"></a>Object.keys(obj)</h2><p>返回对象的可枚举属性名.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.keys(&#123;<span class="attr">x</span>: <span class="number">1</span>, <span class="attr">y</span>:<span class="number">2</span>&#125;)</div><div class="line"><span class="comment">// ['x', 'y']</span></div></pre></td></tr></table></figure>
+<p><strong>getOwnPropertyNames与keys的区别在于属性是否可枚举</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="built_in">Object</span>.create(&#123;<span class="attr">x</span>:<span class="number">1</span>,<span class="attr">y</span>:<span class="number">2</span>&#125;, &#123;<span class="attr">z</span>:&#123;<span class="attr">value</span>:<span class="number">3</span>&#125;&#125;);</div><div class="line"><span class="built_in">Object</span>.keys(a);</div><div class="line"><span class="comment">// []</span></div><div class="line"><span class="built_in">Object</span>.getOwnpropertyNames(a);</div><div class="line"><span class="comment">// ['z']</span></div></pre></td></tr></table></figure>
+<h2 id="object-propertyIsEnumerable-propname"><a href="#object-propertyIsEnumerable-propname" class="headerlink" title="object.propertyIsEnumerable(propname)"></a>object.propertyIsEnumerable(propname)</h2><p>检测某个属性是否可枚举，即在for/in 中 循环可见</p>
+<h2 id="Object-preventExtensions-obj"><a href="#Object-preventExtensions-obj" class="headerlink" title="Object.preventExtensions(obj)"></a>Object.preventExtensions(obj)</h2><p>禁止在一个对象上添加新的属性。不可扩展</p>
+<h2 id="Object-isExtensible-obj"><a href="#Object-isExtensible-obj" class="headerlink" title="Object.isExtensible(obj)"></a>Object.isExtensible(obj)</h2><p>判断某个对象上是否可以添加新属性<br>返回: 能添加为true|不能为false<br><strong>所有的对象在创建的时候都是可扩展的，直到他们被传入 Object.preventExtensions(o) Object.seal(o) 或 Object.freeze(o);</strong></p>
+<h2 id="Object-seal-obj"><a href="#Object-seal-obj" class="headerlink" title="Object.seal(obj)"></a>Object.seal(obj)</h2><p>封闭对象。阻止添加或删除对象的属性</p>
+<h2 id="Object-isSealed-obj"><a href="#Object-isSealed-obj" class="headerlink" title="Object.isSealed(obj)"></a>Object.isSealed(obj)</h2><p>判断一个对象是否是封闭的。<br>如果不可以向一个对象添加新的（非继承）属性，并且现有的（非继承）属性不可删除，则是封闭的。</p>
+<h2 id="Object-freeze-obj"><a href="#Object-freeze-obj" class="headerlink" title="Object.freeze(obj)"></a>Object.freeze(obj)</h2><p>将一个对象设为不可改变,不会影响继承属性</p>
+<h2 id="Object-isFrozen-obj"><a href="#Object-isFrozen-obj" class="headerlink" title="Object.isFrozen(obj)"></a>Object.isFrozen(obj)</h2><p>判断对象是否不可改变, 如果o已冻结并不改变则为true;否则为false;</p>
+<p><strong>限制程度：preventExtensions &lt; seal &lt; freeze</strong></p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a href="http://www.jb51.net/article/60358.htm" target="_blank" rel="external">javascript中Object使用详解</a></li>
+<li><a href="http://javascript.ruanyifeng.com/stdlib/object.html" target="_blank" rel="external">Object对象</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Object-create-proto-descriptors&quot;&gt;&lt;a href=&quot;#Object-create-proto-descriptors&quot; class=&quot;headerlink&quot; title=&quot;Object.create(proto[, descriptors])&quot;&gt;&lt;/a&gt;Object.create(proto[, descriptors])&lt;/h2&gt;&lt;figure class=&quot;highlight javascript&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 指定原型创建空对象&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;Object&lt;/span&gt;.create(proto)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 指定原型和属性秒速来创建一个对象&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;Object&lt;/span&gt;.create(proto, descriptors)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// example&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; obj = &lt;span class=&quot;built_in&quot;&gt;Object&lt;/span&gt;.create(&amp;#123;&lt;span class=&quot;attr&quot;&gt;x&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;&amp;#125;, &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;attr&quot;&gt;z&lt;/span&gt;: &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &lt;span class=&quot;attr&quot;&gt;value&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &lt;span class=&quot;attr&quot;&gt;writable&lt;/span&gt;: &lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &lt;span class=&quot;attr&quot;&gt;enumerable&lt;/span&gt;: &lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &lt;span class=&quot;attr&quot;&gt;configurable&lt;/span&gt;:&lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;);&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;属性描述&quot;&gt;&lt;a href=&quot;#属性描述&quot; class=&quot;headerlink&quot; title=&quot;属性描述&quot;&gt;&lt;/a&gt;属性描述&lt;/h3&gt;&lt;figure class=&quot;highlight javascript&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&amp;#123; &lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;attr&quot;&gt;value&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,               &lt;span class=&quot;comment&quot;&gt;// 属性值&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    writable: &lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;,         &lt;span class=&quot;comment&quot;&gt;// 属性是否可写, 默认为false&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    enumerable: &lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;,       &lt;span class=&quot;comment&quot;&gt;// 属性是否可枚举, 默认为false [当使用for/in语句时，该property是否会被枚举]&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    configurable: &lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;      &lt;span class=&quot;comment&quot;&gt;// 属性是否可配置, 默认为false [该property的属性是否可以修改(如由不可写改为可写)，property是否可以删除]&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;使用 &lt;code&gt;obj.a = 123;&lt;/code&gt; 创建的属性writable, enumerable, configurable属性均为true&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight javascript&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 拥有getter和setter的属性是否可读写取决于是否有get和set函数，因此没有value和writable属性&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;attr&quot;&gt;get&lt;/span&gt;: &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;&lt;/span&gt;)&lt;/span&gt;&amp;#123;...&amp;#125;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;attr&quot;&gt;set&lt;/span&gt;: &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;&lt;/span&gt;)&lt;/span&gt;&amp;#123;...&amp;#125;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;attr&quot;&gt;enumerable&lt;/span&gt;: &lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;attr&quot;&gt;configurable&lt;/span&gt;: &lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// example&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; o =&amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;  &lt;span class=&quot;attr&quot;&gt;$n&lt;/span&gt; : &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;  get next()&amp;#123;&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;this&lt;/span&gt;.$n++;&amp;#125;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;  set next(n) &amp;#123;&lt;span class=&quot;keyword&quot;&gt;this&lt;/span&gt;.$n = n;&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+    
+      <category term="object" scheme="https://feyy.github.io/tags/object/"/>
+    
+      <category term="es5" scheme="https://feyy.github.io/tags/es5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Generator Basics</title>
+    <link href="https://feyy.github.io/2016/01/generator-basic/"/>
+    <id>https://feyy.github.io/2016/01/generator-basic/</id>
+    <published>2016-01-14T16:24:53.000Z</published>
+    <updated>2016-09-08T14:23:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>首先来看一端js代码。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">                                        &#125;);</div><div class="line">                                    &#125;);</div><div class="line">                                &#125;);</div><div class="line">                            &#125;);</div><div class="line">                        &#125;);</div><div class="line">                    &#125;);</div><div class="line">                &#125;);</div><div class="line">            &#125;);</div><div class="line">        &#125;);</div><div class="line">    &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>是不是很眼熟呢？没错，不要怀疑，或多或少，或大或小的都存在这样的代码吧。<br>异步编程是js的核心思想，ES6之前<a href="http://www.ruanyifeng.com/blog/2012/12/asynchronous%EF%BC%BFjavascript.html" target="_blank" rel="external">Javascript异步编程的4种方法</a>：</p>
+<ul>
+<li>回调函数</li>
+<li>事件监听</li>
+<li>发布/订阅</li>
+<li>Promise对象</li>
+</ul>
+<p>ES6的Generator将JavaScript异步编程带入了一个全新的阶段，ES7的Async函数更是提出了异步编程的终极解决方案。<br><a id="more"></a></p>
+<h2 id="运行环境"><a href="#运行环境" class="headerlink" title="运行环境"></a>运行环境</h2><p>node v0.11 可以使用 (node –harmony)</p>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="函数定义"><a href="#函数定义" class="headerlink" title="函数定义"></a>函数定义</h3><p>Generator函数是有两个特征：</p>
+<ul>
+<li>一是，function命令与函数名之间有一个星号；</li>
+<li>二是，函数体内部使用yield[/jiːld/]语句，定义不同的内部状态。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span>* <span class="title">helloWorldGenerator</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">yield</span> <span class="string">'hello'</span>;</div><div class="line">    <span class="keyword">yield</span> <span class="string">'world'</span>;</div><div class="line">    <span class="keyword">return</span> <span class="string">'ending'</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>ES6没有规定，function关键字与函数名之间的星号，写在哪个位置。推荐如上所示，紧跟在function关键字之后</strong></p>
+<h3 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h3><p>Generator函数的调用方法与普通函数一样，也是在函数名后面加上一对圆括号。不同的是，调用Generator函数后，该函数并不执行，返回的也不是函数运行结果，而是一个指向内部状态的指针对象，也就是一个<a href="http://es6.ruanyifeng.com/#docs/iterator" target="_blank" rel="external">遍历器对象</a>（Iterator Object）。</p>
+<p>必须调用遍历器对象的next方法，使得指针移向下一个状态。每次调用next方法，内部指针就从函数头部或上一次停下来的地方开始执行，直到遇到下一个yield语句（或return语句）为止。换言之，Generator函数是分段执行的，yield语句是暂停执行的标记，而next方法可以恢复执行。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> hw = helloWorldGenerator();</div><div class="line"></div><div class="line">hw.next()   <span class="comment">// &#123; value: 'hello', done: false &#125;</span></div><div class="line"></div><div class="line">hw.next()   <span class="comment">// &#123; value: 'world', done: false &#125;</span></div><div class="line"></div><div class="line">hw.next()   <span class="comment">// &#123; value: 'ending', done: true &#125;</span></div><div class="line"></div><div class="line">hw.next()   <span class="comment">// &#123; value: undefined, done: true &#125;</span></div></pre></td></tr></table></figure>
+<h2 id="yield"><a href="#yield" class="headerlink" title="yield"></a>yield</h2><ul>
+<li>yield语句不能用在普通函数中，只能用在generator函数中，否则会报错；</li>
+<li>yield语句如果用在一个表达式之中，必须放在圆括号里面；  </li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(<span class="string">'Hello'</span> + <span class="keyword">yield</span>); <span class="comment">// SyntaxError</span></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'Hello'</span> + <span class="keyword">yield</span> <span class="number">123</span>); <span class="comment">// SyntaxError</span></div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'Hello'</span> + (<span class="keyword">yield</span>)); <span class="comment">// OK</span></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'Hello'</span> + (<span class="keyword">yield</span> <span class="number">123</span>)); <span class="comment">// OK</span></div></pre></td></tr></table></figure>
+<ul>
+<li>yield语句用作函数参数或赋值表达式的右边，可以不加括号。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">foo(<span class="keyword">yield</span> <span class="string">'a'</span>, <span class="keyword">yield</span> <span class="string">'b'</span>); <span class="comment">// OK</span></div><div class="line"><span class="keyword">let</span> input = <span class="keyword">yield</span>; <span class="comment">// OK</span></div></pre></td></tr></table></figure>
+<ul>
+<li>yield句本身没有返回值，或者说总是返回undefined。next方法可以带一个参数，该参数就会被当作上一个yield语句的返回值。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span>* <span class="title">foo</span>(<span class="params">x</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> y = <span class="number">2</span> * (<span class="keyword">yield</span> (x + <span class="number">1</span>));</div><div class="line">    <span class="keyword">var</span> z = <span class="keyword">yield</span> (y / <span class="number">3</span>);</div><div class="line">    <span class="keyword">return</span> (x + y + z);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> a = foo(<span class="number">5</span>);</div><div class="line">a.next() <span class="comment">// Object&#123;value:6, done:false&#125;</span></div><div class="line">a.next() <span class="comment">// Object&#123;value:NaN, done:false&#125;</span></div><div class="line">a.next() <span class="comment">// Object&#123;value:NaN, done:false&#125;</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> b = foo(<span class="number">5</span>);</div><div class="line">b.next() <span class="comment">// &#123; value:6, done:false &#125;</span></div><div class="line">b.next(<span class="number">12</span>) <span class="comment">// &#123; value:8, done:false &#125;</span></div><div class="line">b.next(<span class="number">13</span>) <span class="comment">// &#123; value:42, done:true &#125;</span></div></pre></td></tr></table></figure>
+<h2 id="next"><a href="#next" class="headerlink" title="next"></a>next</h2><p>遍历器对象的next方法的运行逻辑如下。</p>
+<p>（1）遇到yield语句，就暂停执行后面的操作，并将紧跟在yield后面的那个表达式的值，作为返回的对象的value属性值。</p>
+<p>（2）下一次调用next方法时，再继续往下执行，直到遇到下一个yield语句。</p>
+<p>（3）如果没有再遇到新的yield语句，就一直运行到函数结束，直到return语句为止，并将return语句后面的表达式的值，作为返回的对象的value属性值。</p>
+<p>（4）如果该函数没有return语句，则返回的对象的value属性值为undefined。</p>
+<p><strong>yield语句不能用在普通函数中，否则会报错</strong></p>
+<h2 id="Generator-prototype"><a href="#Generator-prototype" class="headerlink" title="Generator.prototype"></a>Generator.prototype</h2><p>Generator函数返回一个Generator实例，可以通过这个实例调用原型链上的方法。</p>
+<h3 id="Generator-prototype-throw"><a href="#Generator-prototype-throw" class="headerlink" title="Generator.prototype.throw()"></a>Generator.prototype.throw()</h3><ul>
+<li>可以在函数体外抛出错误，然后在Generator函数体内捕获。</li>
+<li>如果Generator函数内部没有部署try…catch代码块，那么throw方法抛出的错误，将被外部try…catch代码块捕获。</li>
+<li>如果Generator函数内部部署了try…catch代码块，那么遍历器的throw方法抛出的错误，不影响下一次遍历，否则遍历直接终止。</li>
+<li>Generator函数内抛出的错误，也可以被函数体外的catch捕获。</li>
+<li>一旦Generator执行过程中抛出错误，就不会再执行下去了。如果此后还调用next方法，将返回一个value属性等于undefined、done属性等于true的对象，即JavaScript引擎认为这个Generator已经运行结束了。</li>
+</ul>
+<h3 id="Generator-prototype-return"><a href="#Generator-prototype-return" class="headerlink" title="Generator.prototype.return()"></a>Generator.prototype.return()</h3><ul>
+<li>可以返回给定的值，并且终结遍历Generator函数。</li>
+<li>如果return方法调用时，不提供参数，则返回值的vaule属性为undefined。</li>
+<li>如果Generator函数内部有try…finally代码块，那么return方法会推迟到finally代码块执行完再执行。</li>
+</ul>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://es6.ruanyifeng.com/#docs/generator" target="_blank" rel="external">Generator 函数 - ECMAScript 6入门</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;首先来看一端js代码。&lt;/p&gt;
+&lt;figure class=&quot;highlight javascript&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;                                        &amp;#125;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;                                    &amp;#125;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;                                &amp;#125;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;                            &amp;#125;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;                        &amp;#125;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;                    &amp;#125;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;                &amp;#125;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;            &amp;#125;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &amp;#125;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;#125;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;);&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;是不是很眼熟呢？没错，不要怀疑，或多或少，或大或小的都存在这样的代码吧。&lt;br&gt;异步编程是js的核心思想，ES6之前&lt;a href=&quot;http://www.ruanyifeng.com/blog/2012/12/asynchronous%EF%BC%BFjavascript.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Javascript异步编程的4种方法&lt;/a&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;回调函数&lt;/li&gt;
+&lt;li&gt;事件监听&lt;/li&gt;
+&lt;li&gt;发布/订阅&lt;/li&gt;
+&lt;li&gt;Promise对象&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ES6的Generator将JavaScript异步编程带入了一个全新的阶段，ES7的Async函数更是提出了异步编程的终极解决方案。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="javascript" scheme="https://feyy.github.io/tags/javascript/"/>
+    
+      <category term="ES6" scheme="https://feyy.github.io/tags/ES6/"/>
+    
+      <category term="generator" scheme="https://feyy.github.io/tags/generator/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>pm2基础命令</title>
+    <link href="https://feyy.github.io/2016/01/pm2-basic/"/>
+    <id>https://feyy.github.io/2016/01/pm2-basic/</id>
+    <published>2016-01-13T17:39:54.000Z</published>
+    <updated>2016-09-08T14:23:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>他跟PM2.5扯不上任何关系，也不是Project Management，<a href="https://github.com/Unitech/pm2" target="_blank" rel="external">pm2</a>是一个带有负载均衡功能的Node应用的进程管理器。可轻松根据服务器CPU fork出多个进程，并保证永远存活，自动重启。目前已在生产环境被普遍使用。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install -g pm2</div></pre></td></tr></table></figure>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">pm2 start app.js [-i 4]         <span class="comment"># 托管运行app.js, 可通过-i指定进程数，也可传递'-i max'</span></div><div class="line">pm2 start app.js --name app     <span class="comment"># 命名启动进程</span></div><div class="line">pm2 list                        <span class="comment"># 显示所有进程状态</span></div><div class="line">pm2 monit                       <span class="comment"># 监视所有进程的资源使用状况</span></div><div class="line">pm2 logs                        <span class="comment"># 显示所有进程日志</span></div><div class="line">pm2 stop [all | name | id]      <span class="comment"># 停止全部或者指定name或id的进程</span></div><div class="line">pm2 restart [all | name | id]   <span class="comment"># 重启全部或者指定name或id的进程</span></div><div class="line">pm2 reload [all | name |id]     <span class="comment"># 0秒停机重载进程</span></div><div class="line">pm2 delete [all | name |id]     <span class="comment"># 删除全部或者指定name或id的进程</span></div></pre></td></tr></table></figure>
+<h2 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h2><p>pm2会接管项目日志默认存放于用户目录下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">~/.pm2/logs/</div></pre></td></tr></table></figure>
+<p>日志文件明构成：</p>
+<ul>
+<li>错误日志：{appName}-error-{id}.log</li>
+<li>其他日志：{appName}-out-{id}.log</li>
+</ul>
+<p>注意：使用 <code>pm2 logs</code> 可实时查看所有进程日志。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;他跟PM2.5扯不上任何关系，也不是Project Management，&lt;a href=&quot;https://github.com/Unitech/pm2&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;pm2&lt;/a&gt;是一个带有负载均衡功能的Node应用的进程
+    
+    </summary>
+    
+    
+      <category term="pm2" scheme="https://feyy.github.io/tags/pm2/"/>
+    
+      <category term="node" scheme="https://feyy.github.io/tags/node/"/>
+    
+  </entry>
+  
+</feed>

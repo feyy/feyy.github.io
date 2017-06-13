@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>object冻结 | FEYY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="javascript如何实现object冻结，保证一个不可变的object。 const 常量const声明的常量的值不能通过重新赋值来改变，并且不能重新声明[声明时必须初始化]。针对的是这个变量本身，而不是变量内部的值，可直接理解为针对变量名。 12345678910111213const OBJ = &amp;#123;test: 123&amp;#125;;// 重复声明常量会报错var OBJ;let O">
+<meta name="keywords" content="javascript,object">
+<meta property="og:type" content="article">
+<meta property="og:title" content="object冻结">
+<meta property="og:url" content="https://feyy.github.io/2017/06/object-freeze/index.html">
+<meta property="og:site_name" content="FEYY">
+<meta property="og:description" content="javascript如何实现object冻结，保证一个不可变的object。 const 常量const声明的常量的值不能通过重新赋值来改变，并且不能重新声明[声明时必须初始化]。针对的是这个变量本身，而不是变量内部的值，可直接理解为针对变量名。 12345678910111213const OBJ = &amp;#123;test: 123&amp;#125;;// 重复声明常量会报错var OBJ;let O">
+<meta property="og:updated_time" content="2017-06-12T17:55:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="object冻结">
+<meta name="twitter:description" content="javascript如何实现object冻结，保证一个不可变的object。 const 常量const声明的常量的值不能通过重新赋值来改变，并且不能重新声明[声明时必须初始化]。针对的是这个变量本身，而不是变量内部的值，可直接理解为针对变量名。 12345678910111213const OBJ = &amp;#123;test: 123&amp;#125;;// 重复声明常量会报错var OBJ;let O">
+  
+    <link rel="alternative" href="/atom.xml" title="FEYY" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/uploads/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?3fde8a655b660fa08001fe000ba380a0";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/uploads/photo.png" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">felix</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">A FE の YY everyday！</p>
+        
+        
+            <div class="search">
+                <script>
+                  (function() {
+                    var cx = '000701910795822237800:b-rmwbidat0';
+                    var gcse = document.createElement('script');
+                    gcse.type = 'text/javascript';
+                    gcse.async = true;
+                    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+                        '//cse.google.com/cse.js?cx=' + cx;
+                    var s = document.getElementsByTagName('script')[0];
+                    s.parentNode.insertBefore(gcse, s);
+                    
+                    var timerCount = 0;
+                    (function addPlaceholder() {
+                        var gscInput = document.querySelector('#gsc-i-id1');
+                        if (gscInput) {
+                            gscInput.setAttribute('placeholder', 'search ...')
+                        } else if (++timerCount < 20) {
+                            setTimeout(addPlaceholder, 500);
+                        }
+                    })();
+
+                  })();
+                </script>
+                <gcse:search></gcse:search>
+            </div>
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:692071586@qq.com" title="Email"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2509315840" title="新浪微博"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/feyy" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/animation/" style="font-size: 15px;">animation</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/books/" style="font-size: 15px;">books</a> <a href="/tags/es5/" style="font-size: 10px;">es5</a> <a href="/tags/es6/" style="font-size: 10px;">es6</a> <a href="/tags/foods/" style="font-size: 10px;">foods</a> <a href="/tags/generator/" style="font-size: 10px;">generator</a> <a href="/tags/input-file/" style="font-size: 10px;">input-file</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/node/" style="font-size: 10px;">node</a> <a href="/tags/object/" style="font-size: 15px;">object</a> <a href="/tags/performance/" style="font-size: 15px;">performance</a> <a href="/tags/pm2/" style="font-size: 15px;">pm2</a> <a href="/tags/test/" style="font-size: 10px;">test</a> <a href="/tags/tool/" style="font-size: 10px;">tool</a>
+                    </div>
+                </section>
+                
+                
+                
+
+                
+                
+                <section class="switch-part switch-part3">
+                
+                    <div id="js-aboutme">专注于前端。生命不息，奋斗不止！</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">felix</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img lazy-src="/uploads/photo.png" class="js-avatar">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">felix</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">A FE の YY everyday！</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:692071586@qq.com" title="Email"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2509315840" title="新浪微博"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/feyy" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-2017/06/object-freeze" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/06/object-freeze/" class="article-date">
+      <time datetime="2017-06-12T15:56:33.000Z" itemprop="datePublished">2017-06-12</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      object冻结
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/object/">object</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>javascript如何实现object冻结，保证一个不可变的object。</p>
+<h3 id="const-常量"><a href="#const-常量" class="headerlink" title="const 常量"></a>const 常量</h3><p>const声明的常量的值不能通过重新赋值来改变，并且不能重新声明[声明时必须初始化]。针对的是这个变量本身，而不是变量内部的值，可直接理解为针对变量名。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> OBJ = &#123;<span class="attr">test</span>: <span class="number">123</span>&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 重复声明常量会报错</span></div><div class="line"><span class="keyword">var</span> OBJ;</div><div class="line"><span class="keyword">let</span> OBJ;</div><div class="line"><span class="keyword">const</span> OBJ = &#123;<span class="attr">test</span>: <span class="number">123</span>&#125;</div><div class="line"></div><div class="line"><span class="comment">// 给常量赋值会报错</span></div><div class="line">OBJ = <span class="string">'test'</span>;</div><div class="line"></div><div class="line"><span class="comment">// 对里面的值的操作确没有限制</span></div><div class="line">OBJ.test = <span class="number">1234</span>;</div><div class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(OBJ, <span class="string">'test'</span>); <span class="comment">// &#123;value: 1234, writable: true, enumerable: true, configurable: true&#125;</span></div></pre></td></tr></table></figure>
+<h3 id="extensible-扩展性-Object-isExtensible-Object-preventExtensions"><a href="#extensible-扩展性-Object-isExtensible-Object-preventExtensions" class="headerlink" title="extensible 扩展性 [Object.isExtensible, Object.preventExtensions]"></a>extensible 扩展性 [Object.isExtensible, Object.preventExtensions]</h3><p>如果一个对象可以添加新的属性，则这个对象是可扩展的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> OBJ = &#123;<span class="attr">test</span>: <span class="number">123</span>&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 监测对象是否可扩展</span></div><div class="line"><span class="built_in">Object</span>.isExtensible(OBJ); <span class="comment">// true</span></div><div class="line"></div><div class="line">OBJ.test1 = <span class="number">123</span>; <span class="comment">//&#123;test: 123, test1: 123&#125;</span></div><div class="line"></div><div class="line"><span class="comment">// 使对象不可扩展</span></div><div class="line"><span class="built_in">Object</span>.preventExtensions(OBJ);</div><div class="line"></div><div class="line">OBJ.test2 = <span class="number">123</span>; <span class="comment">//&#123;test: 123, test1: 123&#125;</span></div><div class="line"></div><div class="line"><span class="built_in">Object</span>.isExtensible(OBJ); <span class="comment">// false</span></div></pre></td></tr></table></figure>
+<ul>
+<li>不可扩展的对象的属性通常仍然可以被删除。</li>
+<li>尝试给一个不可扩展对象添加新属性的操作将会失败，不过可能是静默失败，也可能会抛出 TypeError 异常（严格模式下）。</li>
+<li>Object.preventExtensions 只能阻止一个对象不能再添加新的自身属性，仍然可以为该对象的原型添加属性。</li>
+</ul>
+<h3 id="seal-密封性-Object-isSealed-Object-seal"><a href="#seal-密封性-Object-isSealed-Object-seal" class="headerlink" title="seal 密封性 [Object.isSealed, Object.seal]"></a>seal 密封性 [Object.isSealed, Object.seal]</h3><p>密封对象是指那些不能添加新的属性，不能删除已有属性，以及不能修改已有属性的可枚举性（enumerable）、可配置性（configurable）[属性是否可删除以及属性描述特性是否可修改]、可写性（writable），但可能可以修改已有属性的值的对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> OBJ = &#123;<span class="attr">test</span>:<span class="number">123</span>&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 使对象不可扩展</span></div><div class="line"><span class="built_in">Object</span>.preventExtensions(OBJ);</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.isSealed(OBJ); <span class="comment">// false</span></div><div class="line"></div><div class="line"><span class="built_in">Object</span>.defineProperty(OBJ, <span class="string">"test"</span>, &#123;<span class="attr">configurable</span> : <span class="literal">false</span>&#125;);</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.isSealed(OBJ); <span class="comment">// true, 也可以直接使用Object.seal(OBJ);</span></div><div class="line"></div><div class="line">OBJ.test = <span class="number">1234</span>; <span class="comment">// &#123;test: 1234&#125;</span></div></pre></td></tr></table></figure>
+<ul>
+<li>被密封的对象，就是在不可扩展基础上讲属性描述符configurable设置为false;</li>
+<li>同时，被密封的对象，仍然有机会改变属性的值。只不过对于此对象本身而言，不可以再扩展新的属性，不可以更改已有属性的配置信息。</li>
+</ul>
+<h3 id="freeze-冻结-Object-isFrozen-Object-freeze"><a href="#freeze-冻结-Object-isFrozen-Object-freeze" class="headerlink" title="freeze 冻结 [Object.isFrozen, Object.freeze]"></a>freeze 冻结 [Object.isFrozen, Object.freeze]</h3><p>冻结（frozen）是指它不可扩展，所有属性都是不可配置的（non-configurable），且所有数据属性（data properties, 另一种是访问器属性）都是不可写的（non-writable）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> OBJ = &#123;<span class="attr">test</span>:<span class="number">123</span>&#125;;</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.freeze(OBJ);</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(OBJ, <span class="string">'test'</span>); <span class="comment">// &#123;value: 123, writable: false, enumerable: true, configurable: false&#125;</span></div><div class="line"></div><div class="line"><span class="comment">// 对冻结对象的任何操作都会失败</span></div><div class="line">OBJ.name = <span class="string">"Eros"</span>; <span class="comment">// 改写属性值，非严格模式下静默失败;</span></div><div class="line">OBJ.age = <span class="number">18</span>; <span class="comment">// 扩展属性值，非严格模式下静默失败;</span></div><div class="line"><span class="built_in">Object</span>.defineProperty(OBJ,<span class="string">"test"</span>,&#123;<span class="attr">value</span>: <span class="string">"Eros"</span>&#125;); <span class="comment">// 使用defineProperty会直接报错</span></div></pre></td></tr></table></figure>
+<ul>
+<li>这种层面的冻结，只是浅冻结。如果对象里面还嵌套有对象，那么这个内部对象丝毫不受影响。</li>
+</ul>
+<h3 id="递归冻结"><a href="#递归冻结" class="headerlink" title="递归冻结"></a>递归冻结</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.prototype.deepFreeze = <span class="built_in">Object</span>.prototype.deepFreeze || <span class="function"><span class="keyword">function</span> (<span class="params">o</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> prop, propKey;</div><div class="line">    <span class="built_in">Object</span>.freeze(o); <span class="comment">// 首先冻结第一层对象</span></div><div class="line">    <span class="keyword">for</span> (propKey <span class="keyword">in</span> o)&#123;</div><div class="line">        prop = o[propKey];</div><div class="line">        <span class="keyword">if</span>(!o.hasOwnProperty(propKey) || !(<span class="keyword">typeof</span> prop === <span class="string">"object"</span>) || <span class="built_in">Object</span>.isFrozen(prop))&#123;</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        &#125;</div><div class="line">        deepFreeze(prop); <span class="comment">// 递归</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://www.jianshu.com/p/23c003b044a5" target="_blank" rel="external">《JS冻结对象的《人间词话》 完美实现究竟有几层境界？》</a></li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/06/object-freeze/">object冻结</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 felix 的个人博客">felix</a></p>
+        <p><span>发布时间:</span>2017年06月12日 - 23时56分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/06/object-freeze/" title="object冻结">https://feyy.github.io/2017/06/object-freeze/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://feyy.github.io/2017/06/object-freeze/　　作者: felix" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/07/coke-chicken-wings/">
+                    可乐鸡翅
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#const-常量"><span class="toc-number">1.</span> <span class="toc-text">const 常量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#extensible-扩展性-Object-isExtensible-Object-preventExtensions"><span class="toc-number">2.</span> <span class="toc-text">extensible 扩展性 [Object.isExtensible, Object.preventExtensions]</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#seal-密封性-Object-isSealed-Object-seal"><span class="toc-number">3.</span> <span class="toc-text">seal 密封性 [Object.isSealed, Object.seal]</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#freeze-冻结-Object-isFrozen-Object-freeze"><span class="toc-number">4.</span> <span class="toc-text">freeze 冻结 [Object.isFrozen, Object.freeze]</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#递归冻结"><span class="toc-number">5.</span> <span class="toc-text">递归冻结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-number"></span> <span class="toc-text">参考文献</span></a>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+    <div id="gitment-container" style="margin: 0 30px;"></div>
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/07/coke-chicken-wings/" title="下一篇: 可乐鸡翅">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/06/object-freeze/">object冻结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/coke-chicken-wings/">可乐鸡翅</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/efficient-speech-note/">高效演讲 -- 笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/es6-cheat-sheet/">ES6 CHEAT SHEET</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/efficient-speech/">高效演讲 -- 精彩书摘</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/environment-variable/">environment variable</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/pm2-senior-1/">pm2 senior (一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/commit-message/">Commit message 和 Change log</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/input-file-customer/">input-file定制样式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/simple-stress-testing-tool/">simple stress testing tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/animation-performance-2/">动画性能（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/animation-performance-1/">动画性能（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/data-type-toString/">javascript中的数据类型判断</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/object-es5/">Object in ES5</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/generator-basic/">Generator Basics</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/pm2-basic/">pm2基础命令</a></li></ul>
+    <script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 felix
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        <div class="visit">
+            <span id="busuanzi_container_site_pv" style='display:none'>
+                <span id="site-visit" >本站到访数: 
+                    <span id="busuanzi_value_site_uv"></span>
+                </span>
+            </span>
+            <span id="busuanzi_container_page_pv" style='display:none'>
+                <span id="page-visit">, 本页阅读量: 
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+            </span>
+        </div>
+    </div>
+</footer>
+    </div>
+    <script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 10;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  owner: 'feyy',
+  repo: 'feyy.github.io',
+  oauth: {
+    client_id: '0e9fc4241a1d32744a60',
+    client_secret: '7a04465818a1c1bdb8eb74d713a2e17348ea1b70',
+  },
+})
+gitment.render('gitment-container')
+</script>
+  </div>
+<!-- 百度站长链接自动推送 -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+            
+</body>
+</html>

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>javascript中的数据类型判断 | FEYY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="靠，周末比平时还累，好不容易补完了昨天的一篇…看来今天又要水一篇了😭。 typeof   类型 结构     Undefined undefined   Null object (😣)   布尔值 boolean   数值 number   字符串 string   Symbol (ECMAScript 6 新增) symbol   函数对象 (implements [[Call]] in E">
+<meta name="keywords" content="javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javascript中的数据类型判断">
+<meta property="og:url" content="https://feyy.github.io/2016/01/data-type-toString/index.html">
+<meta property="og:site_name" content="FEYY">
+<meta property="og:description" content="靠，周末比平时还累，好不容易补完了昨天的一篇…看来今天又要水一篇了😭。 typeof   类型 结构     Undefined undefined   Null object (😣)   布尔值 boolean   数值 number   字符串 string   Symbol (ECMAScript 6 新增) symbol   函数对象 (implements [[Call]] in E">
+<meta property="og:updated_time" content="2016-09-08T14:23:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="javascript中的数据类型判断">
+<meta name="twitter:description" content="靠，周末比平时还累，好不容易补完了昨天的一篇…看来今天又要水一篇了😭。 typeof   类型 结构     Undefined undefined   Null object (😣)   布尔值 boolean   数值 number   字符串 string   Symbol (ECMAScript 6 新增) symbol   函数对象 (implements [[Call]] in E">
+  
+    <link rel="alternative" href="/atom.xml" title="FEYY" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/uploads/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?3fde8a655b660fa08001fe000ba380a0";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/uploads/photo.png" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">felix</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">A FE の YY everyday！</p>
+        
+        
+            <div class="search">
+                <script>
+                  (function() {
+                    var cx = '000701910795822237800:b-rmwbidat0';
+                    var gcse = document.createElement('script');
+                    gcse.type = 'text/javascript';
+                    gcse.async = true;
+                    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+                        '//cse.google.com/cse.js?cx=' + cx;
+                    var s = document.getElementsByTagName('script')[0];
+                    s.parentNode.insertBefore(gcse, s);
+                    
+                    var timerCount = 0;
+                    (function addPlaceholder() {
+                        var gscInput = document.querySelector('#gsc-i-id1');
+                        if (gscInput) {
+                            gscInput.setAttribute('placeholder', 'search ...')
+                        } else if (++timerCount < 20) {
+                            setTimeout(addPlaceholder, 500);
+                        }
+                    })();
+
+                  })();
+                </script>
+                <gcse:search></gcse:search>
+            </div>
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:692071586@qq.com" title="Email"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2509315840" title="新浪微博"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/feyy" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/animation/" style="font-size: 15px;">animation</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/books/" style="font-size: 15px;">books</a> <a href="/tags/es5/" style="font-size: 10px;">es5</a> <a href="/tags/es6/" style="font-size: 10px;">es6</a> <a href="/tags/foods/" style="font-size: 10px;">foods</a> <a href="/tags/generator/" style="font-size: 10px;">generator</a> <a href="/tags/input-file/" style="font-size: 10px;">input-file</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/node/" style="font-size: 10px;">node</a> <a href="/tags/object/" style="font-size: 15px;">object</a> <a href="/tags/performance/" style="font-size: 15px;">performance</a> <a href="/tags/pm2/" style="font-size: 15px;">pm2</a> <a href="/tags/test/" style="font-size: 10px;">test</a> <a href="/tags/tool/" style="font-size: 10px;">tool</a>
+                    </div>
+                </section>
+                
+                
+                
+
+                
+                
+                <section class="switch-part switch-part3">
+                
+                    <div id="js-aboutme">专注于前端。生命不息，奋斗不止！</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">felix</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img lazy-src="/uploads/photo.png" class="js-avatar">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">felix</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">A FE の YY everyday！</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:692071586@qq.com" title="Email"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2509315840" title="新浪微博"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/feyy" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-2016/01/data-type-toString" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/data-type-toString/" class="article-date">
+      <time datetime="2016-01-16T18:22:16.000Z" itemprop="datePublished">2016-01-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      javascript中的数据类型判断
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>靠，周末比平时还累，好不容易补完了昨天的一篇…看来今天又要水一篇了😭。</p>
+<h2 id="typeof"><a href="#typeof" class="headerlink" title="typeof"></a>typeof</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>结构</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Undefined</td>
+<td>undefined</td>
+</tr>
+<tr>
+<td>Null</td>
+<td>object (😣)</td>
+</tr>
+<tr>
+<td>布尔值</td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>数值</td>
+<td>number</td>
+</tr>
+<tr>
+<td>字符串</td>
+<td>string</td>
+</tr>
+<tr>
+<td>Symbol (ECMAScript 6 新增)</td>
+<td>symbol</td>
+</tr>
+<tr>
+<td>函数对象 (implements [[Call]] in ECMA-262 terms)</td>
+<td>function</td>
+</tr>
+<tr>
+<td>任何其他对象</td>
+<td>object</td>
+</tr>
+</tbody>
+</table>
+<p><strong>能认识的就这么多了，君看着办吧</strong></p>
+<h2 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h2><p>注意了这货不能跨环境，如多个frame或window。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">object <span class="keyword">instanceof</span> <span class="keyword">constructor</span></div></pre></td></tr></table></figure>
+<p><strong>我们玩个真心话大冒险吧，你随便问，不过我只能回答“是”或者“否”，你开始吧</strong></p>
+<h2 id="toString-NaN"><a href="#toString-NaN" class="headerlink" title="toString()"></a>toString()</h2><p>猪脚上传…🐷…长相很一般吗…<br><a id="more"></a><br><code>toString</code>方法的主要用途是返回对象的字符串形式。<br>但使用call方法，可以在任意值上调用Object.prototype.toString方法，从而帮助我们判断这个值的类型。</p>
+<ul>
+<li>数值：返回[object Number]。</li>
+<li>字符串：返回[object String]。</li>
+<li>布尔值：返回[object Boolean]。</li>
+<li>undefined：返回[object Undefined]。</li>
+<li>null：返回[object Null]。</li>
+<li>数组：返回[object Array]。</li>
+<li>arguments对象：返回[object Arguments]。</li>
+<li>函数：返回[object Function]。</li>
+<li>Error对象：返回[object Error]。</li>
+<li>Date对象：返回[object Date]。</li>
+<li>RegExp对象：返回[object RegExp]。</li>
+<li>其他对象：返回[object “ + 构造函数的名称 + “]。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="number">2</span>)           <span class="comment">// "[object Number]"</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="string">''</span>)          <span class="comment">// "[object String]"</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">true</span>)        <span class="comment">// "[object Boolean]"</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">undefined</span>)   <span class="comment">// "[object Undefined]"</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">null</span>)        <span class="comment">// "[object Null]"</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="built_in">Math</span>)        <span class="comment">// "[object Math]"</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.call(&#123;&#125;)          <span class="comment">// "[object Object]"</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.call([])          <span class="comment">// "[object Array]"</span></div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/01/data-type-toString/">javascript中的数据类型判断</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 felix 的个人博客">felix</a></p>
+        <p><span>发布时间:</span>2016年01月17日 - 02时22分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/01/data-type-toString/" title="javascript中的数据类型判断">https://feyy.github.io/2016/01/data-type-toString/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://feyy.github.io/2016/01/data-type-toString/　　作者: felix" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/01/animation-performance-1/">
+                    动画性能（一）
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/01/object-es5/">
+                    Object in ES5
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#typeof"><span class="toc-number">1.</span> <span class="toc-text">typeof</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#instanceof"><span class="toc-number">2.</span> <span class="toc-text">instanceof</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#toString-NaN"><span class="toc-number">3.</span> <span class="toc-text">toString()</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+    <div id="gitment-container" style="margin: 0 30px;"></div>
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/01/animation-performance-1/" title="上一篇: 动画性能（一）">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/01/object-es5/" title="下一篇: Object in ES5">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/06/object-freeze/">object冻结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/coke-chicken-wings/">可乐鸡翅</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/efficient-speech-note/">高效演讲 -- 笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/es6-cheat-sheet/">ES6 CHEAT SHEET</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/efficient-speech/">高效演讲 -- 精彩书摘</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/environment-variable/">environment variable</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/pm2-senior-1/">pm2 senior (一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/commit-message/">Commit message 和 Change log</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/input-file-customer/">input-file定制样式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/simple-stress-testing-tool/">simple stress testing tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/animation-performance-2/">动画性能（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/animation-performance-1/">动画性能（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/data-type-toString/">javascript中的数据类型判断</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/object-es5/">Object in ES5</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/generator-basic/">Generator Basics</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/pm2-basic/">pm2基础命令</a></li></ul>
+    <script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 felix
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        <div class="visit">
+            <span id="busuanzi_container_site_pv" style='display:none'>
+                <span id="site-visit" >本站到访数: 
+                    <span id="busuanzi_value_site_uv"></span>
+                </span>
+            </span>
+            <span id="busuanzi_container_page_pv" style='display:none'>
+                <span id="page-visit">, 本页阅读量: 
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+            </span>
+        </div>
+    </div>
+</footer>
+    </div>
+    <script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 10;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  owner: 'feyy',
+  repo: 'feyy.github.io',
+  oauth: {
+    client_id: '0e9fc4241a1d32744a60',
+    client_secret: '7a04465818a1c1bdb8eb74d713a2e17348ea1b70',
+  },
+})
+gitment.render('gitment-container')
+</script>
+  </div>
+<!-- 百度站长链接自动推送 -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+            
+</body>
+</html>

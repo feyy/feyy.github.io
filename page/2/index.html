@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>FEYY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="A FE の YY everyday! 前端日记，前端基础技术研究：html, html5, javascript, css, css3；程序猿日记。">
+<meta name="keywords" content="feyy, fe, 前端，前端日记">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FEYY">
+<meta property="og:url" content="https://feyy.github.io/page/2/index.html">
+<meta property="og:site_name" content="FEYY">
+<meta property="og:description" content="A FE の YY everyday! 前端日记，前端基础技术研究：html, html5, javascript, css, css3；程序猿日记。">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FEYY">
+<meta name="twitter:description" content="A FE の YY everyday! 前端日记，前端基础技术研究：html, html5, javascript, css, css3；程序猿日记。">
+  
+    <link rel="alternative" href="/atom.xml" title="FEYY" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/uploads/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+    
+      <meta name="baidu-site-verification" content="k3BdAqeRA0" />
+    
+    
+      <meta name="google-site-verification" content="fvJiksyMy4KGkhEAvfZwHPfO22g5r8OQVUi-DT1HlKw" />
+    
+    
+      <meta name="360-site-verification" content="4c1f3548c8bb1c82af9f3ffa7815a6ba" />
+    
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: true,
+          isPost: false,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?3fde8a655b660fa08001fe000ba380a0";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/uploads/photo.png" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">felix</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">A FE の YY everyday！</p>
+        
+        
+            <div class="search">
+                <script>
+                  (function() {
+                    var cx = '000701910795822237800:b-rmwbidat0';
+                    var gcse = document.createElement('script');
+                    gcse.type = 'text/javascript';
+                    gcse.async = true;
+                    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+                        '//cse.google.com/cse.js?cx=' + cx;
+                    var s = document.getElementsByTagName('script')[0];
+                    s.parentNode.insertBefore(gcse, s);
+                    
+                    var timerCount = 0;
+                    (function addPlaceholder() {
+                        var gscInput = document.querySelector('#gsc-i-id1');
+                        if (gscInput) {
+                            gscInput.setAttribute('placeholder', 'search ...')
+                        } else if (++timerCount < 20) {
+                            setTimeout(addPlaceholder, 500);
+                        }
+                    })();
+
+                  })();
+                </script>
+                <gcse:search></gcse:search>
+            </div>
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:692071586@qq.com" title="Email"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2509315840" title="新浪微博"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/feyy" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/animation/" style="font-size: 15px;">animation</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/books/" style="font-size: 15px;">books</a> <a href="/tags/es5/" style="font-size: 10px;">es5</a> <a href="/tags/es6/" style="font-size: 10px;">es6</a> <a href="/tags/foods/" style="font-size: 10px;">foods</a> <a href="/tags/generator/" style="font-size: 10px;">generator</a> <a href="/tags/input-file/" style="font-size: 10px;">input-file</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/node/" style="font-size: 10px;">node</a> <a href="/tags/object/" style="font-size: 15px;">object</a> <a href="/tags/performance/" style="font-size: 15px;">performance</a> <a href="/tags/pm2/" style="font-size: 15px;">pm2</a> <a href="/tags/test/" style="font-size: 10px;">test</a> <a href="/tags/tool/" style="font-size: 10px;">tool</a>
+                    </div>
+                </section>
+                
+                
+                
+
+                
+                
+                <section class="switch-part switch-part3">
+                
+                    <div id="js-aboutme">专注于前端。生命不息，奋斗不止！</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">felix</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img lazy-src="/uploads/photo.png" class="js-avatar">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">felix</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">A FE の YY everyday！</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:692071586@qq.com" title="Email"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2509315840" title="新浪微博"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/feyy" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap">
+  
+    <article id="post-2016/01/animation-performance-2" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/animation-performance-2/" class="article-date">
+      <time datetime="2016-01-18T17:12:13.000Z" itemprop="datePublished">2016-01-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/animation-performance-2/">动画性能（二）</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <p>水了好几天的日记了，居然忘了最重要的YY环节…</p>
+<h2 id="动画帧和帧率"><a href="#动画帧和帧率" class="headerlink" title="动画帧和帧率"></a>动画帧和帧率</h2><p>动画是由一帧一帧构成的。帧可以理解为是动画过程的一张张照片。<br>动画的性能(视觉上的卡顿程度)与帧率有关，也就是1s钟内有多少帧。60fps表示1s钟有60帧。<br>我们一般使用的显示器刷新率是60Hz，也就是1s钟刷新60次。对于人眼来说就是1s钟看到了60张照片，由于人眼的视觉暂留使得两张照片得以连贯过渡，从而形成动画。说成帧率的话也就是60fps，因而60fps是所有web动画追求的极致。<br>通常来说动画如果低于30fps将无法接受。强调动画性能在某种程度上就是获得更高的帧率。</p>
+<h2 id="帧绘制"><a href="#帧绘制" class="headerlink" title="帧绘制"></a>帧绘制</h2><p>那么在web中，每一帧的绘制流程是怎样的呢？</p>
+<ol>
+<li>javascript执行（function call）</li>
+<li>计算需要被加载到节点上的样式结果（Recalculate style–样式重计算） </li>
+<li>为每个节点生成图形和位置（Layout–回流和重布局） </li>
+<li>将每个节点填充到图层中（Paint Setup和Paint–重绘） </li>
+<li>组合图层到页面上（Composite Layers–图层重组）</li>
+</ol>
+<p><img src="http://www.html5rocks.com/en/tutorials/speed/high-performance-animations/devtools-waterfall.jpg" alt="frame-flow"><br>动画性能优化的核心也就是<strong>缩小每帧绘制所需要的时间，尽量在1/60s内完成，从而达到60fps</strong>。<br>上面的步骤有些是可以省略的，优化点就是去省略或者压缩每个点所需的时间。<br>如变换（ transform ）和透明度（ opacity ）的改变就不会触发2、3、4过程。<br>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/animation/">animation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/performance/">performance</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/01/animation-performance-2/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-2016/01/animation-performance-1" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/animation-performance-1/" class="article-date">
+      <time datetime="2016-01-17T18:39:39.000Z" itemprop="datePublished">2016-01-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/animation-performance-1/">动画性能（一）</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>作为一个前端，没有流畅的动画的话，那只能是个切图的…直入主题了，好困的…</p>
+<h2 id="图层"><a href="#图层" class="headerlink" title="图层"></a>图层</h2><p>用过PS的切图仔肯定知道射鸡师们给出的psd是由一个个图层组成的。不过不知道你是否留意到，你所写的前端页面也是由一个个图层堆叠而成的。<br>浏览器在渲染一个页面时，会将页面分为很多个图层，图层有大有小，每个图层上有一个或多个节点。<br>在渲染DOM的时候，浏览器所做的工作实际上是：  </p>
+<ol>
+<li>获取DOM后分割为多个图层 </li>
+<li>对每个图层的节点计算样式结果（Recalculate style–样式重计算） </li>
+<li>为每个节点生成图形和位置（Layout–回流和重布局） </li>
+<li>将每个节点绘制填充到图层位图中（Paint Setup和Paint–重绘） </li>
+<li>图层作为纹理上传至GPU </li>
+<li>符合多个图层到页面上生成最终屏幕图像（Composite Layers–图层重组）</li>
+</ol>
+<p><strong>Chrome子开发者工具台中勾选“show layer borders”标记(在 “rendering” 标题下)，它会高亮屏幕上的层。</strong></p>
+<h3 id="图层创建的标准"><a href="#图层创建的标准" class="headerlink" title="图层创建的标准"></a>图层创建的标准</h3><p>下面为chrome启发式创建图层的条件：</p>
+<ul>
+<li>3D 或透视变换(perspective transform) CSS 属性</li>
+<li>使用加速视频解码的 <code>&lt;video&gt;</code> 元素</li>
+<li>拥有 3D (WebGL) 上下文或加速的 2D 上下文的 <code>&lt;canvas&gt;</code> 元素</li>
+<li>混合插件(如 Flash)</li>
+<li>对自己的 opacity 做 CSS 动画或使用一个动画变换的元素</li>
+<li>拥有加速 CSS 过滤器的元素</li>
+<li>元素有一个包含复合层的后代节点(换句话说，就是一个元素拥有一个子元素，该子元素在自己的层里)</li>
+<li>元素有一个 z-index 较低且包含一个复合层的兄弟元素(换句话说就是该元素在复合层上面渲染)</li>
+</ul>
+<p><strong>需要注意的是，如果图层中某个元素需要重绘，那么整个图层都需要重绘。</strong></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://www.tuicool.com/articles/NBbQjy3" target="_blank" rel="external">前端性能优化（CSS动画篇）</a></li>
+<li><a href="http://www.html5rocks.com/zh/tutorials/speed/layers/" target="_blank" rel="external">Accelerated Rendering in Chrome</a></li>
+<li><a href="http://www.html5rocks.com/en/tutorials/speed/high-performance-animations/" target="_blank" rel="external">High Performance Animations</a></li>
+</ul>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/animation/">animation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/performance/">performance</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-2016/01/data-type-toString" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/data-type-toString/" class="article-date">
+      <time datetime="2016-01-16T18:22:16.000Z" itemprop="datePublished">2016-01-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/data-type-toString/">javascript中的数据类型判断</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <p>靠，周末比平时还累，好不容易补完了昨天的一篇…看来今天又要水一篇了😭。</p>
+<h2 id="typeof"><a href="#typeof" class="headerlink" title="typeof"></a>typeof</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>结构</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Undefined</td>
+<td>undefined</td>
+</tr>
+<tr>
+<td>Null</td>
+<td>object (😣)</td>
+</tr>
+<tr>
+<td>布尔值</td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>数值</td>
+<td>number</td>
+</tr>
+<tr>
+<td>字符串</td>
+<td>string</td>
+</tr>
+<tr>
+<td>Symbol (ECMAScript 6 新增)</td>
+<td>symbol</td>
+</tr>
+<tr>
+<td>函数对象 (implements [[Call]] in ECMA-262 terms)</td>
+<td>function</td>
+</tr>
+<tr>
+<td>任何其他对象</td>
+<td>object</td>
+</tr>
+</tbody>
+</table>
+<p><strong>能认识的就这么多了，君看着办吧</strong></p>
+<h2 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h2><p>注意了这货不能跨环境，如多个frame或window。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">object <span class="keyword">instanceof</span> <span class="keyword">constructor</span></div></pre></td></tr></table></figure>
+<p><strong>我们玩个真心话大冒险吧，你随便问，不过我只能回答“是”或者“否”，你开始吧</strong></p>
+<h2 id="toString-NaN"><a href="#toString-NaN" class="headerlink" title="toString()"></a>toString()</h2><p>猪脚上传…🐷…长相很一般吗…<br>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/01/data-type-toString/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-2016/01/object-es5" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/object-es5/" class="article-date">
+      <time datetime="2016-01-15T19:21:21.000Z" itemprop="datePublished">2016-01-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/object-es5/">Object in ES5</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h2 id="Object-create-proto-descriptors"><a href="#Object-create-proto-descriptors" class="headerlink" title="Object.create(proto[, descriptors])"></a>Object.create(proto[, descriptors])</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 指定原型创建空对象</span></div><div class="line"><span class="built_in">Object</span>.create(proto)</div><div class="line"><span class="comment">// 指定原型和属性秒速来创建一个对象</span></div><div class="line"><span class="built_in">Object</span>.create(proto, descriptors)</div><div class="line"></div><div class="line"><span class="comment">// example</span></div><div class="line"><span class="keyword">var</span> obj = <span class="built_in">Object</span>.create(&#123;<span class="attr">x</span>: <span class="number">1</span>&#125;, &#123;</div><div class="line">    <span class="attr">z</span>: &#123;</div><div class="line">        <span class="attr">value</span>: <span class="number">3</span>,</div><div class="line">        <span class="attr">writable</span>: <span class="literal">true</span>,</div><div class="line">        <span class="attr">enumerable</span>: <span class="literal">true</span>,</div><div class="line">        <span class="attr">configurable</span>:<span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h3 id="属性描述"><a href="#属性描述" class="headerlink" title="属性描述"></a>属性描述</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123; </div><div class="line">    <span class="attr">value</span>: <span class="number">3</span>,               <span class="comment">// 属性值</span></div><div class="line">    writable: <span class="literal">true</span>,         <span class="comment">// 属性是否可写, 默认为false</span></div><div class="line">    enumerable: <span class="literal">true</span>,       <span class="comment">// 属性是否可枚举, 默认为false [当使用for/in语句时，该property是否会被枚举]</span></div><div class="line">    configurable: <span class="literal">true</span>      <span class="comment">// 属性是否可配置, 默认为false [该property的属性是否可以修改(如由不可写改为可写)，property是否可以删除]</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>使用 <code>obj.a = 123;</code> 创建的属性writable, enumerable, configurable属性均为true</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 拥有getter和setter的属性是否可读写取决于是否有get和set函数，因此没有value和writable属性</span></div><div class="line">&#123;</div><div class="line">    <span class="attr">get</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;...&#125;,</div><div class="line">    <span class="attr">set</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;...&#125;,</div><div class="line">    <span class="attr">enumerable</span>: <span class="literal">true</span>,</div><div class="line">    <span class="attr">configurable</span>: <span class="literal">true</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// example</span></div><div class="line"><span class="keyword">var</span> o =&#123;</div><div class="line">  <span class="attr">$n</span> : <span class="number">5</span>,</div><div class="line">  get next()&#123;<span class="keyword">return</span> <span class="keyword">this</span>.$n++;&#125;,</div><div class="line">  set next(n) &#123;<span class="keyword">this</span>.$n = n;&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/es5/">es5</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/object/">object</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/01/object-es5/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-2016/01/generator-basic" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/generator-basic/" class="article-date">
+      <time datetime="2016-01-14T16:24:53.000Z" itemprop="datePublished">2016-01-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/generator-basic/">Generator Basics</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <p>首先来看一端js代码。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">                                        &#125;);</div><div class="line">                                    &#125;);</div><div class="line">                                &#125;);</div><div class="line">                            &#125;);</div><div class="line">                        &#125;);</div><div class="line">                    &#125;);</div><div class="line">                &#125;);</div><div class="line">            &#125;);</div><div class="line">        &#125;);</div><div class="line">    &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>是不是很眼熟呢？没错，不要怀疑，或多或少，或大或小的都存在这样的代码吧。<br>异步编程是js的核心思想，ES6之前<a href="http://www.ruanyifeng.com/blog/2012/12/asynchronous%EF%BC%BFjavascript.html" target="_blank" rel="external">Javascript异步编程的4种方法</a>：</p>
+<ul>
+<li>回调函数</li>
+<li>事件监听</li>
+<li>发布/订阅</li>
+<li>Promise对象</li>
+</ul>
+<p>ES6的Generator将JavaScript异步编程带入了一个全新的阶段，ES7的Async函数更是提出了异步编程的终极解决方案。<br>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ES6/">ES6</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/generator/">generator</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/01/generator-basic/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-2016/01/pm2-basic" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/pm2-basic/" class="article-date">
+      <time datetime="2016-01-13T17:39:54.000Z" itemprop="datePublished">2016-01-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/pm2-basic/">pm2基础命令</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>他跟PM2.5扯不上任何关系，也不是Project Management，<a href="https://github.com/Unitech/pm2" target="_blank" rel="external">pm2</a>是一个带有负载均衡功能的Node应用的进程管理器。可轻松根据服务器CPU fork出多个进程，并保证永远存活，自动重启。目前已在生产环境被普遍使用。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install -g pm2</div></pre></td></tr></table></figure>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">pm2 start app.js [-i 4]         <span class="comment"># 托管运行app.js, 可通过-i指定进程数，也可传递'-i max'</span></div><div class="line">pm2 start app.js --name app     <span class="comment"># 命名启动进程</span></div><div class="line">pm2 list                        <span class="comment"># 显示所有进程状态</span></div><div class="line">pm2 monit                       <span class="comment"># 监视所有进程的资源使用状况</span></div><div class="line">pm2 logs                        <span class="comment"># 显示所有进程日志</span></div><div class="line">pm2 stop [all | name | id]      <span class="comment"># 停止全部或者指定name或id的进程</span></div><div class="line">pm2 restart [all | name | id]   <span class="comment"># 重启全部或者指定name或id的进程</span></div><div class="line">pm2 reload [all | name |id]     <span class="comment"># 0秒停机重载进程</span></div><div class="line">pm2 delete [all | name |id]     <span class="comment"># 删除全部或者指定name或id的进程</span></div></pre></td></tr></table></figure>
+<h2 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h2><p>pm2会接管项目日志默认存放于用户目录下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">~/.pm2/logs/</div></pre></td></tr></table></figure>
+<p>日志文件明构成：</p>
+<ul>
+<li>错误日志：{appName}-error-{id}.log</li>
+<li>其他日志：{appName}-out-{id}.log</li>
+</ul>
+<p>注意：使用 <code>pm2 logs</code> 可实时查看所有进程日志。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/">node</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pm2/">pm2</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </nav>
+  
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 felix
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        <div class="visit">
+            <span id="busuanzi_container_site_pv" style='display:none'>
+                <span id="site-visit" >本站到访数: 
+                    <span id="busuanzi_value_site_uv"></span>
+                </span>
+            </span>
+            <span id="busuanzi_container_page_pv" style='display:none'>
+                <span id="page-visit">, 本页阅读量: 
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+            </span>
+        </div>
+    </div>
+</footer>
+    </div>
+    <script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 10;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  owner: 'feyy',
+  repo: 'feyy.github.io',
+  oauth: {
+    client_id: '0e9fc4241a1d32744a60',
+    client_secret: '7a04465818a1c1bdb8eb74d713a2e17348ea1b70',
+  },
+})
+gitment.render('gitment-container')
+</script>
+  </div>
+<!-- 百度站长链接自动推送 -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+            
+</body>
+</html>
