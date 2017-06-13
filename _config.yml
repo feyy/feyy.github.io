@@ -13,7 +13,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://feyy.github.io/
+url: http://feyy.github.io/
 root: /
 permalink: :title/
 permalink_defaults:
@@ -71,9 +71,5 @@ theme: yelee
 deploy:
 - type: git
   repo: https://github.com/feyy/feyy.github.io
-  branch: master
-  message: FE の YY
-- type: git
-  repo: https://git.coding.net/feyy/feyy.git
   branch: master
   message: FE の YY
